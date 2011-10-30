@@ -13,9 +13,7 @@ with 'CatalystX::TraitFor::Controller::Resource' => {
     -excludes => '_msg',
 };
 
-=head1 NAME
-
-CatalystX::TraitFor::Controller::SortableResource - a Sortable CRUD Role for your Controller
+# ABSTRACT: a Sortable CRUD Role for your Controller
 
 =head1 SYNOPSIS
 
@@ -84,21 +82,5 @@ sub _msg {
 
     return $self->__msg( $c, $action, $id );
 }
-
-=head1 AUTHOR
-
-=over
-
-=item David Schmidt (davewood) C<< <davewood@gmx.at> >>
-
-=back
-
-=head1 LICENSE
-
-Copyright 2010 David Schmidt. Some rights reserved.
-
-This software is free software and is licensed under the same terms as perl itself.
-
-=cut
 
 1;

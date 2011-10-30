@@ -9,9 +9,7 @@ use namespace::autoclean;
 use MooseX::Types::Moose qw/ ArrayRef /;
 use MooseX::Types::Common::String qw/ NonEmptySimpleStr /;
 
-=head1 NAME
-
-CatalystX::TraitFor::Controller::Resource - CRUD Role for your Controller
+# ABSTRACT: CRUD Role for your Controller
 
 =head1 SYNOPSIS
 
@@ -476,21 +474,5 @@ sub _name {
         : ucfirst( $self->resource_key );
     return $name;
 }
-
-=head1 AUTHOR
-
-=over
-
-=item David Schmidt (davewood) C<< <davewood@gmx.at> >>
-
-=back
-
-=head1 LICENSE
-
-Copyright 2010 David Schmidt. Some rights reserved.
-
-This software is free software and is licensed under the same terms as perl itself.
-
-=cut
 
 1;
