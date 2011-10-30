@@ -104,7 +104,6 @@ has 'resultset_key' => (
     required => 1,
 );
 
-
 =head2 resources_key
 
 stash key used to store all results of this resource. (e.g.: 'tracks')
@@ -140,9 +139,9 @@ this is required if parent_key is set
 =cut
 
 has 'parent_key' => (
-    is          => 'ro',
-    isa         => NonEmptySimpleStr,
-    predicate   => 'has_parent',
+    is        => 'ro',
+    isa       => NonEmptySimpleStr,
+    predicate => 'has_parent',
 );
 
 =head2 parents_accessor
@@ -167,7 +166,7 @@ e.g.: 'MyApp::Form::Resources'
 =cut
 
 has 'form_class' => (
-    is => 'ro',
+    is       => 'ro',
     required => 1,
 );
 
@@ -179,8 +178,8 @@ optional, if you don't supply a form_template a stringified version will be used
 =cut
 
 has 'form_template' => (
-    is          => 'ro',
-    predicate   => 'has_form_template',
+    is        => 'ro',
+    predicate => 'has_form_template',
 );
 
 =head2 activate_fields_create
@@ -195,7 +194,7 @@ Can be overriden with $c->stash->{activate_form_fields}
 has 'activate_fields_create' => (
     is      => 'ro',
     isa     => ArrayRef,
-    default => sub {[]},
+    default => sub { [] },
 );
 
 =head2 activate_fields_edit
@@ -209,7 +208,7 @@ Can be overriden with $c->stash->{activate_form_fields}
 has 'activate_fields_edit' => (
     is      => 'ro',
     isa     => ArrayRef,
-    default => sub {[]},
+    default => sub { [] },
 );
 
 =head2 redirect_mode
@@ -236,24 +235,27 @@ ATTENTION: If you add custom edit methods you have to make sure the PathPart sta
 =cut
 
 has 'redirect_mode' => (
-    is => 'ro',
+    is      => 'ro',
     default => 'index',
 );
 
 sub _path_part_prefix {
-    my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
     my @path = split '/', $c->req->path;
     my $last;
+
     #if ($c->action->name =~ '^(edit|move|delete).*') {
     #} else {
     #}
-    if ($c->action->name eq 'create') {
+    if ( $c->action->name eq 'create' ) {
         $last = @path - 3;
-    } else { 
+    }
+    else {
+
         # edit*, move, delete
         $last = @path - 4;
     }
-    my $path_part = join '/', @path[0 .. $last];
+    my $path_part = join '/', @path[ 0 .. $last ];
     $path_part .= '/' if $path_part;
     return '/' . $path_part;
 }
@@ -271,19 +273,27 @@ sub _path_part_prefix {
 #   path: /parents/1/resources/3/edit   => redirect_path: /parents/1/show
 #   path: /parents/1/resources/3/delete => redirect_path: /parents/1/show
 sub _redirect {
-    my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
     my $path = '/';
+
     # get the path part array and compute a string
-    my $path_part = join '/', @{$self->action_for('base')->attributes->{PathPart}};
-    if ($self->redirect_mode eq 'index') {
+    my $path_part = join '/',
+        @{ $self->action_for('base')->attributes->{PathPart} };
+    if ( $self->redirect_mode eq 'index' ) {
         $path = $self->_path_part_prefix($c) . $path_part . '/';
-    } elsif ($self->redirect_mode eq 'show') {
-        if ($c->action->name eq 'delete') {
+    }
+    elsif ( $self->redirect_mode eq 'show' ) {
+        if ( $c->action->name eq 'delete' ) {
             $path = $self->_path_part_prefix($c) . $path_part . '/';
-        } else {
-            $path = $self->_path_part_prefix($c) . $path_part . '/' . $c->stash->{$self->resource_key}->id . '/show';
         }
-    } elsif ($self->redirect_mode eq 'show_parent') {
+        else {
+            $path
+                = $self->_path_part_prefix($c)
+                . $path_part . '/'
+                . $c->stash->{ $self->resource_key }->id . '/show';
+        }
+    }
+    elsif ( $self->redirect_mode eq 'show_parent' ) {
         $path = $self->_path_part_prefix($c) . 'show';
     }
     $c->res->redirect($path);
@@ -296,26 +306,29 @@ the following paths will be loaded
 =cut
 
 sub base : Chained('') PathPart('') CaptureArgs(0) {
-    my ($self, $c ) = @_;
+    my ( $self, $c ) = @_;
+
     # Store the ResultSet in stash so it's available for other methods
     # get the model from the controllers config that consumes this role
     my $resultset;
-    if($self->has_parent) {
-        $resultset = $c->stash->{$self->parent_key}->related_resultset($self->parents_accessor);
-    } 
-    else {
-        $resultset = $c->model($self->model);
+    if ( $self->has_parent ) {
+        $resultset = $c->stash->{ $self->parent_key }
+            ->related_resultset( $self->parents_accessor );
     }
-    $c->stash($self->resultset_key => $resultset);
+    else {
+        $resultset = $c->model( $self->model );
+    }
+    $c->stash( $self->resultset_key => $resultset );
 }
 
 sub base_with_id : Chained('base') PathPart('') CaptureArgs(1) {
-    my ($self, $c, $id ) = @_;
-    my $resource = $c->stash->{$self->resultset_key}->find($id);
+    my ( $self, $c, $id ) = @_;
+    my $resource = $c->stash->{ $self->resultset_key }->find($id);
     if ($resource) {
-        $c->stash->{$self->resource_key} = $resource;
-    } else {
-        $c->stash(error_msg => $self->_msg($c, 'not_found', $id));
+        $c->stash->{ $self->resource_key } = $resource;
+    }
+    else {
+        $c->stash( error_msg => $self->_msg( $c, 'not_found', $id ) );
         $c->detach('/error404');
     }
 }
@@ -327,8 +340,10 @@ a list of all resources is accessible as $c->stash->{resources}
 =cut
 
 sub index : Chained('base') PathPart('') Args(0) {
-    my ($self, $c ) = @_;
-    $c->stash($self->resources_key => [ $c->stash->{$self->resultset_key}->all ]);
+    my ( $self, $c ) = @_;
+    $c->stash(
+        $self->resources_key => [ $c->stash->{ $self->resultset_key }->all ]
+    );
 }
 
 =head2 show
@@ -338,7 +353,7 @@ the resource specified by its id is accessible as $c->stash->{resource}
 =cut
 
 sub show : Chained('base_with_id') PathPart('show') Args(0) {
-    my ($self, $c ) = @_;
+    my ( $self, $c ) = @_;
 }
 
 =head2 create
@@ -349,12 +364,12 @@ create a resource
 
 sub create : Chained('base') PathPart('create') Args(0) {
     my ( $self, $c ) = @_;
-    my $resource = $c->stash->{$self->resultset_key}->new_result({});
+    my $resource = $c->stash->{ $self->resultset_key }->new_result( {} );
     $c->stash(
         $self->resource_key => $resource,
-        set_create_msg => 1,
+        set_create_msg      => 1,
     );
-    $self->form($c, $self->activate_fields_create);
+    $self->form( $c, $self->activate_fields_create );
 }
 
 =head2 delete
@@ -365,10 +380,10 @@ delete a specific resource
 
 sub delete : Chained('base_with_id') PathPart('delete') Args(0) {
     my ( $self, $c ) = @_;
-    my $resource = $c->stash->{$self->resource_key};
-    my $msg = $self->_msg($c, 'delete');
+    my $resource = $c->stash->{ $self->resource_key };
+    my $msg = $self->_msg( $c, 'delete' );
     $resource->delete($c);
-    $c->flash(msg => $msg);
+    $c->flash( msg => $msg );
     $self->_redirect($c);
 }
 
@@ -380,8 +395,8 @@ edit a specific resource
 
 sub edit : Chained('base_with_id') PathPart('edit') Args(0) {
     my ( $self, $c ) = @_;
-    $c->stash(set_update_msg => 1);
-    $self->form($c, $self->activate_fields_edit);
+    $c->stash( set_update_msg => 1 );
+    $self->form( $c, $self->activate_fields_edit );
 }
 
 # $activate_fields is a hashref with fields to activate
@@ -390,9 +405,11 @@ sub edit : Chained('base_with_id') PathPart('edit') Args(0) {
 sub form {
     my ( $self, $c, $activate_fields ) = @_;
 
-    my $resource = $c->stash->{$self->resource_key};
+    my $resource = $c->stash->{ $self->resource_key };
+
     # activate_form_fields in stash overrides activate_fields from config
-    my $activate_form_fields = $c->stash->{activate_form_fields} || [@$activate_fields];
+    my $activate_form_fields = $c->stash->{activate_form_fields}
+        || [@$activate_fields];
 
     # if you want to pass additional attributes to the form put a hashref in
     # the stash key 'form_attrs'
@@ -400,47 +417,63 @@ sub form {
 
     my $form = $self->form_class->new(%$form_attrs);
     $form->process(
-        active  => $activate_form_fields,
-        item    => $resource, 
-        params  => $c->req->params,
+        active => $activate_form_fields,
+        item   => $resource,
+        params => $c->req->params,
     );
 
-    if($self->has_form_template) {
+    if ( $self->has_form_template ) {
         $c->stash( template => $self->form_template, form => $form );
-    } else {
+    }
+    else {
         my $rendered_form = $form->render;
         $c->stash( template => \$rendered_form );
     }
 
-    return unless $form->validated;  
+    return unless $form->validated;
 
-    if ($c->stash->{set_create_msg}) {
-        $c->flash(msg => $self->_msg($c, 'create'));
-    } elsif ($c->stash->{set_update_msg}) {
-        $c->flash(msg => $self->_msg($c, 'update'));
+    if ( $c->stash->{set_create_msg} ) {
+        $c->flash( msg => $self->_msg( $c, 'create' ) );
+    }
+    elsif ( $c->stash->{set_update_msg} ) {
+        $c->flash( msg => $self->_msg( $c, 'update' ) );
     }
 
     $self->_redirect($c);
 }
 
 sub _msg {
-    my ($self, $c, $action, $id) = @_;   
+    my ( $self, $c, $action, $id ) = @_;
 
-    if($action eq 'not_found') {
-        return $c->can('loc') ? $c->loc('error.resource_not_found', $id) : "No such resource: $id";
-    } elsif($action eq 'create') {
-        return $c->can('loc') ? $c->loc('resources.created', $self->_name($c)) : $self->_name($c) . " created.";
-    } elsif($action eq 'update') {
-        return $c->can('loc') ? $c->loc('resources.updated', $self->_name($c)) : $self->_name($c) . " updated.";
-    } elsif($action eq 'delete') {
-        return $c->can('loc') ? $c->loc('resources.deleted', $self->_name($c)) : $self->_name($c) . " deleted.";
+    if ( $action eq 'not_found' ) {
+        return $c->can('loc')
+            ? $c->loc( 'error.resource_not_found', $id )
+            : "No such resource: $id";
+    }
+    elsif ( $action eq 'create' ) {
+        return $c->can('loc')
+            ? $c->loc( 'resources.created', $self->_name($c) )
+            : $self->_name($c) . " created.";
+    }
+    elsif ( $action eq 'update' ) {
+        return $c->can('loc')
+            ? $c->loc( 'resources.updated', $self->_name($c) )
+            : $self->_name($c) . " updated.";
+    }
+    elsif ( $action eq 'delete' ) {
+        return $c->can('loc')
+            ? $c->loc( 'resources.deleted', $self->_name($c) )
+            : $self->_name($c) . " deleted.";
     }
 }
 
 sub _name {
-    my ($self, $c) = @_;   
-    my $resource = $c->stash->{$self->resource_key};
-    my $name = $resource->result_source->has_column('name') ? $resource->name : ucfirst($self->resource_key);
+    my ( $self, $c ) = @_;
+    my $resource = $c->stash->{ $self->resource_key };
+    my $name
+        = $resource->result_source->has_column('name')
+        ? $resource->name
+        : ucfirst( $self->resource_key );
     return $name;
 }
 
