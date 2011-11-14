@@ -1,8 +1,5 @@
 package CatalystX::TraitFor::Controller::SortableResource;
 
-use strict;
-use warnings;
-
 use Moose::Role -traits => 'MooseX::MethodAttributes::Role::Meta::Role';
 use namespace::autoclean;
 

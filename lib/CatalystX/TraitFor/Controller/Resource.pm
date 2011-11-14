@@ -1,8 +1,5 @@
 package CatalystX::TraitFor::Controller::Resource;
 
-use strict;
-use warnings;
-
 use MooseX::MethodAttributes::Role;
 use namespace::autoclean;
 
