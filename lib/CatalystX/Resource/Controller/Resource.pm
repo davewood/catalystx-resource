@@ -1,12 +1,28 @@
-package CatalystX::TraitFor::Controller::Resource;
-
-use MooseX::MethodAttributes::Role;
+package CatalystX::Resource::Controller::Resource;
+use Moose;
 use namespace::autoclean;
+
+BEGIN { extends 'Catalyst::Controller'; }
 
 use MooseX::Types::Moose qw/ ArrayRef /;
 use MooseX::Types::Common::String qw/ NonEmptySimpleStr /;
 
-# ABSTRACT: CRUD Role for your Controller
+with qw/
+    CatalystX::Component::Traits
+/;
+
+has '+_trait_merge' => (default => 1);
+
+__PACKAGE__->config(
+    traits => [qw/
+        List
+        Show
+        Delete
+        Form
+        Create
+        Edit
+    /],
+);
 
 =head1 SYNOPSIS
 
@@ -27,7 +43,7 @@ use MooseX::Types::Common::String qw/ NonEmptySimpleStr /;
             },
         },
     );
-    
+
     # a nested Resource Controller
     package MyApp::Controller::Tracks;
     with 'CatalystX::TraitFor::Controller::Resource';
@@ -50,7 +66,7 @@ use MooseX::Types::Common::String qw/ NonEmptySimpleStr /;
 
 =head1 DESCRIPTION
 
-CatalystX::TraitFor::Controller::Resource enhances the consuming Controller with CRUD 
+CatalystX::TraitFor::Controller::Resource enhances the consuming Controller with CRUD
 functionality. It supports nested Resources and File Uploads.
 
     base
@@ -84,6 +100,7 @@ required, the DBIC model associated with this resource. (e.g.: 'DB::CDs')
 
 has 'model' => (
     is       => 'ro',
+    #isa      => 'DBIx::Class::Resultset',
     required => 1,
 );
 
@@ -151,59 +168,6 @@ this is required if parent_key is set
 has 'parents_accessor' => (
     is  => 'ro',
     isa => NonEmptySimpleStr,
-);
-
-=head2 form_class
-
-HTML::FormHandler class to use for this resource. 
-e.g.: 'MyApp::Form::Resources'
-
-=cut
-
-has 'form_class' => (
-    is       => 'ro',
-    required => 1,
-);
-
-=head2 form_template
-
-template file for HTML::FormHandler
-optional, if you don't supply a form_template a stringified version will be used
-
-=cut
-
-has 'form_template' => (
-    is        => 'ro',
-    predicate => 'has_form_template',
-);
-
-=head2 activate_fields_create
-
-hashref of form fields to activate in the create form
-e.g. ['password', 'password_confirm']
-default = []
-Can be overriden with $c->stash->{activate_form_fields}
-
-=cut
-
-has 'activate_fields_create' => (
-    is      => 'ro',
-    isa     => ArrayRef,
-    default => sub { [] },
-);
-
-=head2 activate_fields_edit
-
-hashref of form fields to activate in the edit form
-default = []
-Can be overriden with $c->stash->{activate_form_fields}
-
-=cut
-
-has 'activate_fields_edit' => (
-    is      => 'ro',
-    isa     => ArrayRef,
-    default => sub { [] },
 );
 
 =head2 redirect_mode
@@ -341,102 +305,6 @@ sub index : Chained('base') PathPart('') Args(0) {
     );
 }
 
-=head2 show
-
-the resource specified by its id is accessible as $c->stash->{resource}
-
-=cut
-
-sub show : Chained('base_with_id') PathPart('show') Args(0) {
-    my ( $self, $c ) = @_;
-}
-
-=head2 create
-
-create a resource
-
-=cut
-
-sub create : Chained('base') PathPart('create') Args(0) {
-    my ( $self, $c ) = @_;
-    my $resource = $c->stash->{ $self->resultset_key }->new_result( {} );
-    $c->stash(
-        $self->resource_key => $resource,
-        set_create_msg      => 1,
-    );
-    $self->form( $c, $self->activate_fields_create );
-}
-
-=head2 delete
-
-delete a specific resource
-
-=cut
-
-sub delete : Chained('base_with_id') PathPart('delete') Args(0) {
-    my ( $self, $c ) = @_;
-    my $resource = $c->stash->{ $self->resource_key };
-    my $msg = $self->_msg( $c, 'delete' );
-    $resource->delete($c);
-    $c->flash( msg => $msg );
-    $self->_redirect($c);
-}
-
-=head2 edit
-
-edit a specific resource
-
-=cut
-
-sub edit : Chained('base_with_id') PathPart('edit') Args(0) {
-    my ( $self, $c ) = @_;
-    $c->stash( set_update_msg => 1 );
-    $self->form( $c, $self->activate_fields_edit );
-}
-
-# $activate_fields is a hashref with fields to activate
-# set $c->stash->{activate_form_fields} to override fields you want activated.
-# e.g.: $c->stash->{activate_form_fields} = [ 'password', 'password_repeat' ]
-sub form {
-    my ( $self, $c, $activate_fields ) = @_;
-
-    my $resource = $c->stash->{ $self->resource_key };
-
-    # activate_form_fields in stash overrides activate_fields from config
-    my $activate_form_fields = $c->stash->{activate_form_fields}
-        || [@$activate_fields];
-
-    # if you want to pass additional attributes to the form put a hashref in
-    # the stash key 'form_attrs'
-    my $form_attrs = $c->stash->{form_attrs} || {};
-
-    my $form = $self->form_class->new(%$form_attrs);
-    $form->process(
-        active => $activate_form_fields,
-        item   => $resource,
-        params => $c->req->params,
-    );
-
-    if ( $self->has_form_template ) {
-        $c->stash( template => $self->form_template, form => $form );
-    }
-    else {
-        my $rendered_form = $form->render;
-        $c->stash( template => \$rendered_form );
-    }
-
-    return unless $form->validated;
-
-    if ( $c->stash->{set_create_msg} ) {
-        $c->flash( msg => $self->_msg( $c, 'create' ) );
-    }
-    elsif ( $c->stash->{set_update_msg} ) {
-        $c->flash( msg => $self->_msg( $c, 'update' ) );
-    }
-
-    $self->_redirect($c);
-}
-
 sub _msg {
     my ( $self, $c, $action, $id ) = @_;
 
@@ -472,4 +340,5 @@ sub _name {
     return $name;
 }
 
+__PACKAGE__->meta->make_immutable();
 1;
