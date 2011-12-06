@@ -41,7 +41,9 @@ $schema->resultset('Artist')->create({
 
 ok(request('/')->is_success, 'Get /');
 content_like('/', '/TestApp/', 'index action returns "TestApp"');
+
 ok(request('/artists/1/show')->is_success, 'Get /artists/1/show');
+content_like('/artists/1/show', '/davewood/', '/artists/1/show contains "davewood"');
 #is(request('/logout')->code, 302, 'Get 302 from /logout');
 #
 #{

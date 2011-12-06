@@ -1,4 +1,0 @@
-[% FOREACH artist = artists %]
-    <a href="[% c.uri_for(c.controller('Artists').action_for('show'), [ artist.id ]) %]">[% artist.name %]</a>
-    <br/>
-[% END %]
