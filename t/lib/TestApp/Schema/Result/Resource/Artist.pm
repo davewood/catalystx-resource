@@ -1,4 +1,4 @@
-package TestApp::Schema::Result::Artist;
+package TestApp::Schema::Result::Resource::Artist;
 use strict;
 use warnings;
 use base qw/DBIx::Class/;

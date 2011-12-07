@@ -4,6 +4,9 @@ use namespace::autoclean;
 
 use Catalyst qw/
     +CatalystX::Resource
+    Session
+    Session::Store::FastMmap
+    Session::State::Cookie
 /;
 extends 'Catalyst';
 
@@ -11,6 +14,7 @@ our $VERSION = '0.01';
 
 __PACKAGE__->config(
     name => 'TestApp',
+    #session => { flash_to_stash => 1 },
     'Model::DB' => {
         connect_info => {
             dsn => 'dbi:SQLite:' . __PACKAGE__->path_to('testdbic.db'),
@@ -31,8 +35,8 @@ __PACKAGE__->config(
         resultset_key => 'artists_rs',
         resources_key => 'artists',
         resource_key => 'artist',
-        form_class => 'Form::Artist',
-        model => 'DB::Artist',
+        form_class => 'TestApp::Form::Resource::Artist',
+        model => 'DB::Resource::Artist',
         actions => { 
             base => { 
                 PathPart => 'artists',
@@ -43,8 +47,8 @@ __PACKAGE__->config(
         resultset_key => 'songs_rs',
         resources_key => 'songs',
         resource_key => 'song',
-        form_class => 'Form::Song',
-        model => 'DB::Songs',
+        form_class => 'TestApp::Form::Resource::Song',
+        model => 'DB::Resource::Song',
         traits => ['-Delete'],
         actions => { 
             base => { 
@@ -54,7 +58,7 @@ __PACKAGE__->config(
         },
     },
     'CatalystX::Resource' => {
-        controllers => ['Artist', 'Song'],
+        controllers => [ qw/ Artist Song / ],
      },
 );
 

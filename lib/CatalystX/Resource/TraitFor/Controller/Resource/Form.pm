@@ -1,6 +1,7 @@
 package CatalystX::Resource::TraitFor::Controller::Resource::Form;
 
 use MooseX::MethodAttributes::Role;
+use MooseX::Types::LoadableClass qw/ LoadableClass /;
 use namespace::autoclean;
 
 requires qw/
@@ -19,6 +20,8 @@ e.g.: 'MyApp::Form::Resources'
 has 'form_class' => (
     is       => 'ro',
     required => 1,
+    isa => LoadableClass,
+    coerce => 1,
 );
 
 =head2 form_template

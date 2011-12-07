@@ -19,7 +19,7 @@ sub delete : Chained('base_with_id') PathPart('delete') Args(0) {
     my ( $self, $c ) = @_;
     my $resource = $c->stash->{ $self->resource_key };
     my $msg = $self->_msg( $c, 'delete' );
-    $resource->delete($c);
+    $resource->delete;
     $c->flash( msg => $msg );
     $self->_redirect($c);
 }

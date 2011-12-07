@@ -1,8 +1,8 @@
-package TestApp::Form::Artist;
+package TestApp::Form::Resource::Song;
 use HTML::FormHandler::Moose;
 extends 'HTML::FormHandler::Model::DBIC';
 
-has '+item_class' => ( default => 'Artist' );
+has '+item_class' => ( default => 'Resource::Song' );
 
 has_field 'name' => (
     type => 'Text',
