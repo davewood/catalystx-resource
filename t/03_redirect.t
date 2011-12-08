@@ -53,7 +53,7 @@ $schema->resultset('Resource::Artist')->create({
 {
     #TODO delete should be POST request
     my $path ='/artists/1/delete';
-    my ($res, $c) = ctx_request($path);
+    my $res = request(POST $path);
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path , '/artists/list');

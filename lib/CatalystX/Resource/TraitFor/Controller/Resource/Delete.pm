@@ -17,11 +17,16 @@ delete a specific resource
 
 sub delete : Chained('base_with_id') PathPart('delete') Args(0) {
     my ( $self, $c ) = @_;
-    my $resource = $c->stash->{ $self->resource_key };
-    my $msg = $self->_msg( $c, 'delete' );
-    $resource->delete;
-    $c->flash( msg => $msg );
-    $self->_redirect($c);
+    if ($c->req->method eq 'POST') {
+        my $resource = $c->stash->{ $self->resource_key };
+        my $msg = $self->_msg( $c, 'delete' );
+        $resource->delete;
+        $c->flash( msg => $msg );
+        $self->_redirect($c);
+    }
+    else {
+        $c->detach('/error404');
+    }
 }
 
 1;

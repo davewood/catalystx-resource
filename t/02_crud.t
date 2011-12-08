@@ -31,73 +31,68 @@ $schema->resultset('Resource::Artist')->create({
     name => 'flipper',
 });
 
-my $res;
-my $path;
 
 # test / for no special reason
-$path = '/';
-$res = request($path);
-ok($res->is_success, "$path returns HTTP 200");
-like($res->decoded_content, '/TestApp/', "$path content contains string 'TestApp'");
+{
+    my $path = '/';
+    my $res = request($path);
+    ok($res->is_success, "$path returns HTTP 200");
+    like($res->decoded_content, '/TestApp/', "$path content contains string 'TestApp'");
+}
 
 # SHOW
-$path ='/artists/1/show';
-$res = request($path);
-ok($res->is_success, "$path returns HTTP 200");
-like($res->decoded_content, '/davewood/', "$path content contains string 'davewood'");
-$path = '/artists/99/show';
-ok(request($path)->code == 404, "Unknown resource $path returns HTTP 404");
+{
+    my $path ='/artists/1/show';
+    my $res = request($path);
+    ok($res->is_success, "$path returns HTTP 200");
+    like($res->decoded_content, '/davewood/', "$path content contains string 'davewood'");
+    $path = '/artists/99/show';
+    ok(request($path)->code == 404, "Unknown resource $path returns HTTP 404");
+}
 
 # LIST
-$path ='/artists/list';
-$res = request($path);
-ok($res->is_success, "Get $path");
-like($res->decoded_content, '/davewood[\s\S]*flipper/', "$path content contains 'davewood' and 'flipper'");
+{
+    my $path ='/artists/list';
+    my $res = request($path);
+    ok($res->is_success, "Get $path");
+    like($res->decoded_content, '/davewood[\s\S]*flipper/', "$path content contains 'davewood' and 'flipper'");
+}
 
 # DELETE
-#TODO delete should be POST request
-$path ='/artists/1/delete';
-$res = request($path);
-ok($res->is_redirect, "$path returns HTTP 302");
-ok(request($path)->code == 404, "Already deleted $path returns HTTP 404");
-#TODO test that redirected URL returns 200
+{
+    my $path ='/artists/1/delete';
+    my $res = request($path);
+    ok($res->is_error, "delete with GET returns HTTP 404");
+    $res = request(POST $path);
+    ok($res->is_redirect, "$path returns HTTP 302");
+    ok(request(POST $path)->code == 404, "Already deleted $path returns HTTP 404");
+}
 
 # CREATE
-$path ='/artists/create';
-$res = request($path);
-ok($res->is_success, "$path returns HTTP 200");
-like($res->decoded_content, '/method="post"/', "$path content contains 'method=\"post\"'");
-$res = request(POST $path, [ name => 'simit' ]);
-ok($res->is_redirect, "$path returns HTTP 302");
-$path ='/artists/list';
-$res = request($path);
-like($res->decoded_content, '/simit/', "$path content contains 'simit'");
-# check "msg" content after redirect
+{
+    my $path ='/artists/create';
+    my $res = request($path);
+    ok($res->is_success, "$path returns HTTP 200");
+    like($res->decoded_content, '/method="post"/', "$path content contains 'method=\"post\"'");
+    $res = request(POST $path, [ name => 'simit' ]);
+    ok($res->is_redirect, "$path returns HTTP 302");
+    $path ='/artists/list';
+    $res = request($path);
+    like($res->decoded_content, '/simit/', "$path content contains 'simit'");
+}
 
 # EDIT
-$path ='/artists/2/edit';
-$res = request($path);
-ok($res->is_success, "$path returns HTTP 200");
-like($res->decoded_content, '/method="post"/', "$path content contains 'method=\"post\"'");
-like($res->decoded_content, '/flipper/', "$path content contains 'flipper'");
-$res = request(POST $path, [ name => 'willy' ]);
-ok($res->is_redirect, "$path returns HTTP 302");
-$path ='/artists/2/show';
-$res = request($path);
-like($res->decoded_content, '/willy/', "$path content contains 'willy'");
-# check "msg" content after redirect
-
-
-#{
-#    my ($res, $c) = ctx_request(POST 'http://localhost/login', [username => 'bob', password => 'aaaa']);
-#    is($res->code, 200, 'get 200 ok as login page redisplayed when bullshit');
-#
-#    ($res, $c) = ctx_request(POST 'http://localhost/login', [username => 'bob', password => 'bbbb']);
-#    is($res->code, 302, 'get 302 redirect');
-#    my $cookie = $res->header('Set-Cookie');
-#    ok($cookie, 'Have a cookie');
-#    is($res->header('Location'), 'http://localhost/', 'Redirect to /');
-#    ok($c->user, 'Have a user in $c');
-#}
+{
+    my $path ='/artists/2/edit';
+    my $res = request($path);
+    ok($res->is_success, "$path returns HTTP 200");
+    like($res->decoded_content, '/method="post"/', "$path content contains 'method=\"post\"'");
+    like($res->decoded_content, '/flipper/', "$path content contains 'flipper'");
+    $res = request(POST $path, [ name => 'willy' ]);
+    ok($res->is_redirect, "$path returns HTTP 302");
+    $path ='/artists/2/show';
+    $res = request($path);
+    like($res->decoded_content, '/willy/', "$path content contains 'willy'");
+}
 
 done_testing;
