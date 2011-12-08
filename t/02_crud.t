@@ -81,6 +81,7 @@ ok($res->is_success, "$path returns HTTP 200");
 like($res->decoded_content, '/method="post"/', "$path content contains 'method=\"post\"'");
 like($res->decoded_content, '/flipper/', "$path content contains 'flipper'");
 $res = request(POST $path, [ name => 'willy' ]);
+ok($res->is_redirect, "$path returns HTTP 302");
 $path ='/artists/2/show';
 $res = request($path);
 like($res->decoded_content, '/willy/', "$path content contains 'willy'");
