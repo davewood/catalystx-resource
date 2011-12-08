@@ -28,35 +28,51 @@ $schema->resultset('Resource::Artist')->create({
     name => 'flipper',
 });
 
+my $res;
+my $path;
+
 # test / for no special reason
-ok(request('/')->is_success, 'Get /');
-content_like('/', '/TestApp/', 'index action returns "TestApp"');
+$path = '/';
+$res = request($path);
+ok($res->is_success, "$path returns HTTP 200");
+like($res->decoded_content, '/TestApp/', "$path content contains string 'TestApp'");
 
 # SHOW
-ok(request('/artists/1/show')->is_success, 'Get /artists/1/show');
-content_like('/artists/1/show', '/davewood/', '/artists/1/show contains "davewood"');
-
-ok(request('/artists/99/show')->is_error, 'Unknown resource /artists/99/show should return error');
-ok(request('/artists/99/show')->code == 404, 'Unknown resource /artists/99/show should return code 404');
+$path ='/artists/1/show'; 
+$res = request($path);
+ok($res->is_success, "$path returns HTTP 200");
+like($res->decoded_content, '/davewood/', "$path content contains string 'davewood'");
+$path = '/artists/99/show';
+ok(request($path)->code == 404, "Unknown resource $path returns HTTP 404");
 
 # LIST
-ok(request('/artists/list')->is_success, 'Get /artists/list');
-content_like('/artists/list', '/davewood[\s\S]*flipper/', '/artists/list contains "davewood" and "flipper"');
+$path ='/artists/list'; 
+$res = request($path);
+ok($res->is_success, "Get $path");
+like($res->decoded_content, '/davewood[\s\S]*flipper/', "$path content contains 'davewood' and 'flipper'");
 
 # DELETE
 #TODO delete should be POST request
-my $res = request('/artists/1/delete');
-ok($res->is_redirect, 'after successful delete a 302 redirect happens');
+$path ='/artists/1/delete'; 
+$res = request($path);
+ok($res->is_redirect, "$path returns HTTP 302");
 #TODO test that redirected URL returns 200
-ok(request('/artists/1/show')->code == 404, 'delete resource /artists/1/show should now return code 404');
+ok(request($path)->code == 404, "Already deleted $path returns HTTP 404");
 
 # CREATE
-ok(request('/artists/create')->is_success, 'Get /artists/create');
-content_like('/artists/create', '/method="post"/', '/artists/create contains "flipper"');
+$path ='/artists/create'; 
+$res = request($path);
+ok($res->is_success, "$path returns HTTP 200");
+like($res->decoded_content, '/method="post"/', "$path content contains 'method=\"post\"'");
+# check "msg" content after redirect
 
 # EDIT
-#ok(request('/artists/2/edit')->is_success, 'Get /artists/2/edit');
-#content_like('/artists/2/edit', '/davewood/', '/artists/2/edit contains "flipper"');
+$path ='/artists/2/edit'; 
+$res = request($path);
+ok($res->is_success, "$path returns HTTP 200");
+like($res->decoded_content, '/method="post"/', "$path content contains 'method=\"post\"'");
+like($res->decoded_content, '/flipper/', "$path content contains 'flipper'");
+# check "msg" content after redirect
 
 
 #is(request('/logout')->code, 302, 'Get 302 from /logout');
