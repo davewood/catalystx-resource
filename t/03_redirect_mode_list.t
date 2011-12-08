@@ -41,12 +41,10 @@ $schema->resultset('Resource::Artist')->create({
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path, '/artists/list');
-    my $content = get($uri->path);
+    my $cookie = $res->header('Set-Cookie');
+    my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     unlike($content, '/>davewood<\/a>/', 'resource has been deleted');
-    TODO: {
-        local $TODO = "stash_to_flash appears to not work with Catalyst::Test.";
-        like($content, '/davewood deleted/', 'check delete success notification');
-    }
+    like($content, '/davewood deleted/', 'check delete success notification');
     ok(request($path)->code == 404, "Already deleted $path returns HTTP 404");
 }
 
@@ -60,12 +58,10 @@ $schema->resultset('Resource::Artist')->create({
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path, '/artists/list');
-    my $content = get($uri->path);
-    like($content, '/simit/', 'resource has been created');
-    TODO: {
-        local $TODO = "stash_to_flash appears to not work with Catalyst::Test.";
-        like($content, '/davewood created/', 'check create success notification');
-    }
+    my $cookie = $res->header('Set-Cookie');
+    my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
+    like($content, '/>simit<\/a>/', 'resource has been created');
+    like($content, '/simit created/', 'check create success notification');
 }
 
 # EDIT
@@ -78,12 +74,10 @@ $schema->resultset('Resource::Artist')->create({
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path, '/artists/list');
-    my $content = get($uri->path);
-    like($content, '/foobar/', 'resource has been edited');
-    TODO: {
-        local $TODO = "stash_to_flash appears to not work with Catalyst::Test.";
-        like($content, '/foobar updated/', 'check edit success notification');
-    }
+    my $cookie = $res->header('Set-Cookie');
+    my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
+    like($content, '/>foobar<\/a>/', 'resource has been edited');
+    like($content, '/foobar updated/', 'check edit success notification');
 }
 
 done_testing;
