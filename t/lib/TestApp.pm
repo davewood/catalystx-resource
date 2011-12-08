@@ -43,22 +43,35 @@ __PACKAGE__->config(
             },
         },
     },
+    'Controller::Resource::Album' => {
+        resultset_key => 'albums_rs',
+        resources_key => 'albums',
+        resource_key => 'album',
+        form_class => 'TestApp::Form::Resource::Album',
+        model => 'DB::Resource::Album',
+        traits => ['-Delete'],
+        actions => { 
+            base => { 
+                PathPart => 'albums',
+                Chained  => '/resource/artist/base_with_id',
+            },
+        },
+    },
     'Controller::Resource::Song' => {
         resultset_key => 'songs_rs',
         resources_key => 'songs',
         resource_key => 'song',
         form_class => 'TestApp::Form::Resource::Song',
         model => 'DB::Resource::Song',
-        traits => ['-Delete'],
         actions => { 
             base => { 
                 PathPart => 'songs',
-                Chained  => '/resource/artist/base_with_id',
+                Chained  => '/resource/album/base_with_id',
             },
         },
     },
     'CatalystX::Resource' => {
-        controllers => [ qw/ Artist Song / ],
+        controllers => [ qw/ Artist Album Song / ],
      },
 );
 
