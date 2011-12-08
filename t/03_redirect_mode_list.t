@@ -34,28 +34,13 @@ $schema->resultset('Resource::Artist')->create({
 
 # check redirection for redirect_mode = 'list'
 
-# CREATE
-{
-    my $path ='/artists/create';
-    my $res = request(POST $path, [ name => 'simit' ]);
-    ok($res->is_redirect, "$path returns HTTP 302");
-    my $uri = URI->new($res->header('location'));
-    is($uri->path , '/artists/list');
-    my $content = get($uri->path);
-    like($content, '/simit/', "$path content contains 'simit'");
-    TODO: {
-        local $TODO = "stash_to_flash appears to not work with Catalyst::Test.";
-        like($content, '/simit created/', 'check create success notification');
-    }
-}
-
 # DELETE
 {
     my $path ='/artists/1/delete';
     my $res = request(POST $path);
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path , '/artists/list');
+    is($uri->path, '/artists/list');
     my $content = get($uri->path);
     unlike($content, '/>davewood<\/a>/', 'resource has been deleted');
     TODO: {
@@ -74,7 +59,7 @@ $schema->resultset('Resource::Artist')->create({
     $res = request(POST $path, [ name => 'simit' ]);
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path , '/artists/list');
+    is($uri->path, '/artists/list');
     my $content = get($uri->path);
     like($content, '/simit/', 'resource has been created');
     TODO: {
@@ -92,7 +77,7 @@ $schema->resultset('Resource::Artist')->create({
     $res = request(POST $path, [ name => 'foobar' ]);
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path , '/artists/list');
+    is($uri->path, '/artists/list');
     my $content = get($uri->path);
     like($content, '/foobar/', 'resource has been edited');
     TODO: {
