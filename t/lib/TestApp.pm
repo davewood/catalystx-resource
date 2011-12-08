@@ -14,7 +14,7 @@ our $VERSION = '0.01';
 
 __PACKAGE__->config(
     name => 'TestApp',
-    #session => { flash_to_stash => 1 },
+    session => { flash_to_stash => 1 },
     'Model::DB' => {
         connect_info => {
             dsn => 'dbi:SQLite:' . __PACKAGE__->path_to('testdbic.db'),

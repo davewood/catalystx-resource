@@ -199,63 +199,36 @@ has 'redirect_mode' => (
     default => 'list',
 );
 
-sub _path_part_prefix {
-    my ( $self, $c ) = @_;
-    my @path = split '/', $c->req->path;
-    my $last;
-
-    #if ($c->action->name =~ '^(edit|move|delete).*') {
-    #} else {
-    #}
-    if ( $c->action->name eq 'create' ) {
-        $last = @path - 3;
-    }
-    else {
-
-        # edit*, move, delete
-        $last = @path - 4;
-    }
-    my $path_part = join '/', @path[ 0 .. $last ];
-    $path_part .= '/' if $path_part;
-    return '/' . $path_part;
-}
-
-# redirect_mode 'index':
-#   path: /parents/1/resources/create   => redirect_path: /parents/1/resources
-#   path: /parents/1/resources/3/edit   => redirect_path: /parents/1/resources
-#   path: /parents/1/resources/3/delete => redirect_path: /parents/1/resources
+# redirect_mode 'list':
+#   path: /parents/1/resources/create   => redirect_path: /parents/1/resources/list
+#   path: /parents/1/resources/3/edit   => redirect_path: /parents/1/resources/list
+#   path: /parents/1/resources/3/delete => redirect_path: /parents/1/resources/list
 # redirect_mode 'show':
 #   path: /parents/1/resources/create   => redirect_path: /parents/1/resources/<id>/show
 #   path: /parents/1/resources/3/edit   => redirect_path: /parents/1/resources/3/show
-#   path: /parents/1/resources/3/delete => redirect_path: /parents/1/resources
+#   path: /parents/1/resources/3/delete => redirect_path: /parents/1/resources/list
 # redirect_mode 'show_parent':
 #   path: /parents/1/resources/create   => redirect_path: /parents/1/show
 #   path: /parents/1/resources/3/edit   => redirect_path: /parents/1/show
 #   path: /parents/1/resources/3/delete => redirect_path: /parents/1/show
 sub _redirect {
     my ( $self, $c ) = @_;
-    my $path = '/';
 
-    # get the path part array and compute a string
-    my $path_part = join '/',
-        @{ $self->action_for('base')->attributes->{PathPart} };
-    if ( $self->redirect_mode eq 'index' ) {
-        $path = $self->_path_part_prefix($c) . $path_part . '/';
+    my $path;
+    my $mode = $self->redirect_mode;
+    my @chain = @{ $c->dispatcher->expand_action( $c->action )->{chain} };
+
+    if ( $mode eq 'list' ) {
+        my @captures = @{ $c->request->captures };
+        pop(@captures)
+            unless $c->action->name eq 'create';
+        $path = $c->uri_for_action($self->action_for('list'), \@captures);
     }
-    elsif ( $self->redirect_mode eq 'show' ) {
-        if ( $c->action->name eq 'delete' ) {
-            $path = $self->_path_part_prefix($c) . $path_part . '/';
-        }
-        else {
-            $path
-                = $self->_path_part_prefix($c)
-                . $path_part . '/'
-                . $c->stash->{ $self->resource_key }->id . '/show';
-        }
+    elsif ( $mode eq 'show' ) {
     }
-    elsif ( $self->redirect_mode eq 'show_parent' ) {
-        $path = $self->_path_part_prefix($c) . 'show';
+    elsif ( $mode eq 'show' ) {
     }
+
     $c->res->redirect($path);
 }
 
