@@ -195,7 +195,8 @@ ATTENTION: If you add custom edit methods you have to make sure the PathPart sta
 
 has 'redirect_mode' => (
     is      => 'ro',
-    default => 'index',
+    isa     => NonEmptySimpleStr,
+    default => 'list',
 );
 
 sub _path_part_prefix {
