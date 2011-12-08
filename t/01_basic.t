@@ -26,11 +26,11 @@ for my $action_name (qw/base list show delete create edit/) {
 can_ok ( $controller, 'form' );
 
 
-$controller = $testapp->controller('Resource::Song');
+$controller = $testapp->controller('Resource::Album');
 
 is (
     $controller->{'catalyst_component_name'},
-    'TestApp::Controller::Resource::Song',
+    'TestApp::Controller::Resource::Album',
     'Injected controller has correct class name'
 );
 
