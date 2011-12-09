@@ -36,11 +36,11 @@ my $testapp = new_ok ( 'TestApp' );
 }
 
 {
-    my $controller = $testapp->controller('Resource::Album');
+    my $controller = $testapp->controller('Resource::Concert');
 
     is (
         $controller->{'catalyst_component_name'},
-        'TestApp::Controller::Resource::Album',
+        'TestApp::Controller::Resource::Concert',
         'Injected controller has correct class name'
     );
     

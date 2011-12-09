@@ -37,8 +37,8 @@ __PACKAGE__->config(
         resource_key => 'artist',
         form_class => 'TestApp::Form::Resource::Artist',
         model => 'DB::Resource::Artist',
-        actions => { 
-            base => { 
+        actions => {
+            base => {
                 PathPart => 'artists',
             },
         },
@@ -47,12 +47,27 @@ __PACKAGE__->config(
         resultset_key => 'albums_rs',
         resources_key => 'albums',
         resource_key => 'album',
+        parent_key => 'artist',
+        parents_accessor => 'albums',
         form_class => 'TestApp::Form::Resource::Album',
         model => 'DB::Resource::Album',
-        traits => ['-Delete'],
-        actions => { 
-            base => { 
+        actions => {
+            base => {
                 PathPart => 'albums',
+                Chained  => '/resource/artist/base_with_id',
+            },
+        },
+    },
+    'Controller::Resource::Concert' => {
+        resultset_key => 'concerts_rs',
+        resources_key => 'concerts',
+        resource_key => 'concert',
+        form_class => 'TestApp::Form::Resource::Concert',
+        model => 'DB::Resource::Concert',
+        traits => ['-Delete'],
+        actions => {
+            base => {
+                PathPart => 'concerts',
                 Chained  => '/resource/artist/base_with_id',
             },
         },
@@ -63,15 +78,15 @@ __PACKAGE__->config(
         resource_key => 'song',
         form_class => 'TestApp::Form::Resource::Song',
         model => 'DB::Resource::Song',
-        actions => { 
-            base => { 
+        actions => {
+            base => {
                 PathPart => 'songs',
                 Chained  => '/resource/album/base_with_id',
             },
         },
     },
     'CatalystX::Resource' => {
-        controllers => [ qw/ Artist Album Song / ],
+        controllers => [ qw/ Artist Concert Album Song / ],
      },
 );
 
