@@ -218,15 +218,41 @@ sub _redirect {
     my $mode = $self->redirect_mode;
     my @chain = @{ $c->dispatcher->expand_action( $c->action )->{chain} };
 
+    ########################
+    # redirect_mode 'list' #
+    ########################
     if ( $mode eq 'list' ) {
         my @captures = @{ $c->request->captures };
         pop(@captures)
             unless $c->action->name eq 'create';
         $path = $c->uri_for_action($self->action_for('list'), \@captures);
     }
+
+    ########################
+    # redirect_mode 'show' #
+    ########################
     elsif ( $mode eq 'show' ) {
+        my @captures = @{ $c->request->captures };
+        my $action = $c->action->name;
+
+        if ( $action eq 'create' ) {
+            my $id_of_created_resource = $c->stash->{ $self->resource_key }->id;
+            push @captures, $id_of_created_resource;
+            $path = $c->uri_for_action($self->action_for('show'), \@captures);
+        }
+        elsif ( $action eq 'edit' ) {
+            $path = $c->uri_for_action($self->action_for('show'), \@captures);
+        }
+        elsif ( $action eq 'delete' ) {
+            pop(@captures);
+            $path = $c->uri_for_action($self->action_for('list'), \@captures);
+        }
     }
-    elsif ( $mode eq 'show' ) {
+
+    ###############################
+    # redirect_mode 'show_parent' #
+    ###############################
+    elsif ( $mode eq 'show_parent' ) {
     }
 
     $c->res->redirect($path);
