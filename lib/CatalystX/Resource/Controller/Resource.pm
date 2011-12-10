@@ -125,6 +125,19 @@ sub _redirect {
     my $path;
     my $mode = $self->redirect_mode;
     my @captures = @{ $c->request->captures };
+    my $action = $c->action->name;
+
+    ##############################
+    # move_next || move_previous #
+    ##############################
+    # path: /parents/1/resources/1/move_next        => redirect_path: /parents/1/resources/list
+    # path: /parents/1/resources/1/move_previous    => redirect_path: /parents/1/resources/list
+    # path: /resources/1/move_next                  => redirect_path: /resources/list
+    # path: /resources/1/move_previous              => redirect_path: /resources/list
+    if ( $action eq 'move_next' || $action eq 'move_previous' ) {
+        pop(@captures);
+        $path = $c->uri_for_action($self->action_for('list'), \@captures);
+    }
 
     ########################
     # redirect_mode 'list' #
@@ -132,9 +145,9 @@ sub _redirect {
     # path: /parents/1/resources/create   => redirect_path: /parents/1/resources/list
     # path: /parents/1/resources/3/edit   => redirect_path: /parents/1/resources/list
     # path: /parents/1/resources/3/delete => redirect_path: /parents/1/resources/list
-    if ( $mode eq 'list' ) {
+    elsif ( $mode eq 'list' ) {
         pop(@captures)
-            unless $c->action->name eq 'create';
+            unless $action eq 'create';
         $path = $c->uri_for_action($self->action_for('list'), \@captures);
     }
 
@@ -145,8 +158,6 @@ sub _redirect {
     # path: /parents/1/resources/3/edit   => redirect_path: /parents/1/resources/3/show
     # path: /parents/1/resources/3/delete => redirect_path: /parents/1/resources/list
     elsif ( $mode eq 'show' ) {
-        my $action = $c->action->name;
-
         if ( $action eq 'create' ) {
             my $id_of_created_resource = $c->stash->{ $self->resource_key }->id;
             push @captures, $id_of_created_resource;
@@ -172,7 +183,6 @@ sub _redirect {
     # path: /resources/3/delete           => redirect_path: /resources/list
     elsif ( $mode eq 'show_parent' ) {
         if ( $self->has_parent ) {
-            my $action = $c->action->name;
             my @chain = @{ $c->dispatcher->expand_action( $c->action )->{chain} };
 
             # base_with_id action of parent

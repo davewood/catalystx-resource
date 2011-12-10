@@ -20,6 +20,8 @@ requires qw/
 adds these paths to your Controller which call move_previous/move_next
 on your resource item as provided by L<DBIx::Class::Ordered>
 
+Make sure the schema for your sortable resource has a 'position' column.
+
     /resource/*/move_previous
     /resource/*/move_next
 
