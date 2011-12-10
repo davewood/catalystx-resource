@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use base qw/DBIx::Class/;
 
-__PACKAGE__->load_components(qw/ Core /);
+__PACKAGE__->load_components(qw/ Ordered Core /);
 __PACKAGE__->table('song');
 __PACKAGE__->add_columns(
     id => {
@@ -18,9 +18,17 @@ __PACKAGE__->add_columns(
     name => {
         data_type => 'varchar',
     },
+    'position',
+    {
+        data_type => 'integer',
+        is_numeric => 1,
+        is_nullable => 0,
+    },
 );
 
 __PACKAGE__->set_primary_key ('id');
+__PACKAGE__->resultset_attributes({ order_by => 'position' });
+__PACKAGE__->position_column('position');
 
 __PACKAGE__->belongs_to(
     'album',

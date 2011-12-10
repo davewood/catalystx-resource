@@ -1,0 +1,4 @@
+[% FOREACH song = songs %]
+    <a href="[% c.uri_for(c.controller('Resource::Song').action_for('show'), [ artist.id, album.id, song.id ]) %]">[% song.name %]</a>
+    <br/>
+[% END %]
