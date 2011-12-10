@@ -265,19 +265,6 @@ sub base_with_id : Chained('base') PathPart('') CaptureArgs(1) {
     }
 }
 
-=head2 list
-
-a list of all resources is accessible as $c->stash->{resources}
-
-=cut
-
-sub list : Chained('base') PathPart('list') Args(0) {
-    my ( $self, $c ) = @_;
-    $c->stash(
-        $self->resources_key => [ $c->stash->{ $self->resultset_key }->all ]
-    );
-}
-
 =head2 _msg
 
 returns notification msg to be displayed

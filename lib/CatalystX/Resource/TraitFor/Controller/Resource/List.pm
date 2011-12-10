@@ -12,7 +12,7 @@ requires qw/
 
 =head2 list
 
-a list of all resources is accessible as $c->stash->{resources}
+display list (index) of all resources
 
 =cut
 
