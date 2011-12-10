@@ -10,6 +10,8 @@ requires qw/
     _redirect
 /;
 
+=head1 ATTRIBUTES
+
 =head2 form_class
 
 HTML::FormHandler class to use for this resource.
@@ -35,6 +37,15 @@ has 'form_template' => (
     is        => 'ro',
     predicate => 'has_form_template',
 );
+
+=head1 METHODS
+
+=head2 form
+
+handle form validation, configuration of visible fields
+and setting of notification messages
+
+=cut
 
 sub form {
     my ( $self, $c, $activate_fields ) = @_;

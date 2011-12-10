@@ -9,9 +9,11 @@ requires qw/
     _redirect
 /;
 
+=head1 ACTIONS
+
 =head2 delete
 
-delete a specific resource
+delete a specific resource with a POST request
 
 =cut
 

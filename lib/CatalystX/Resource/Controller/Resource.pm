@@ -119,6 +119,14 @@ has 'redirect_mode' => (
     default => 'list',
 );
 
+=head1 METHODS
+
+=head2 _redirect
+
+redirect request after create/edit/delete/move_next/move_previous
+
+=cut
+
 sub _redirect {
     my ( $self, $c ) = @_;
 
@@ -210,13 +218,16 @@ sub _redirect {
     $c->res->redirect($path);
 }
 
-=head1 PATHS
+=head1 ACTIONS
 
-the following paths will be loaded
+the following actions will be loaded
 
 =head2 base
 
 Starts a chain and puts resultset into stash
+
+For nested resources chain childrens 'base' action
+to parents 'base_with_id' action
 
 =cut
 
@@ -236,7 +247,7 @@ sub base : Chained('') PathPart('') CaptureArgs(0) {
     $c->stash( $self->resultset_key => $resultset );
 }
 
-=head2
+=head2 base_with_id
 
 chains to 'base' and puts resource with id into stash
 
@@ -308,7 +319,7 @@ sub _msg {
     }
 }
 
-=head2
+=head2 _name
 
 get a meaningful name for the resource
 

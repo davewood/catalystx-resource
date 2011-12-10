@@ -9,6 +9,28 @@ requires qw/
     form
 /;
 
+=head1 ATTRIBUTES
+
+=head2 activate_fields_create
+
+hashref of form fields to activate in the create form
+e.g. ['password', 'password_confirm']
+default = []
+Can be overriden with $c->stash->{activate_form_fields}
+
+Example: You only want admins to be able to change a field.
+Disable field by default in HTML::FormHandler.
+
+=cut
+
+has 'activate_fields_create' => (
+    is      => 'ro',
+    isa     => 'ArrayRef',
+    default => sub { [] },
+);
+
+=head1 ACTIONS
+
 =head2 create
 
 create a resource
@@ -24,20 +46,5 @@ sub create : Chained('base') PathPart('create') Args(0) {
     );
     $self->form( $c, $self->activate_fields_create );
 }
-
-=head2 activate_fields_create
-
-hashref of form fields to activate in the create form
-e.g. ['password', 'password_confirm']
-default = []
-Can be overriden with $c->stash->{activate_form_fields}
-
-=cut
-
-has 'activate_fields_create' => (
-    is      => 'ro',
-    isa     => 'ArrayRef',
-    default => sub { [] },
-);
 
 1;

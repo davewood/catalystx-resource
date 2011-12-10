@@ -7,17 +7,8 @@ requires qw/
     form
 /;
 
-=head2 edit
 
-edit a specific resource
-
-=cut
-
-sub edit : Chained('base_with_id') PathPart('edit') Args(0) {
-    my ( $self, $c ) = @_;
-    $c->stash( set_update_msg => 1 );
-    $self->form( $c, $self->activate_fields_edit );
-}
+=head1 ATTRIBUTES
 
 =head2 activate_fields_edit
 
@@ -32,5 +23,20 @@ has 'activate_fields_edit' => (
     isa     => 'ArrayRef',
     default => sub { [] },
 );
+
+=head1 ACTIONS
+
+=head2 edit
+
+edit a specific resource
+
+=cut
+
+sub edit : Chained('base_with_id') PathPart('edit') Args(0) {
+    my ( $self, $c ) = @_;
+    $c->stash( set_update_msg => 1 );
+    $self->form( $c, $self->activate_fields_edit );
+}
+
 
 1;

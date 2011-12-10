@@ -8,6 +8,8 @@ requires qw/
     resultset_key
 /;
 
+=head1 ACTIONS
+
 =head2 list
 
 a list of all resources is accessible as $c->stash->{resources}

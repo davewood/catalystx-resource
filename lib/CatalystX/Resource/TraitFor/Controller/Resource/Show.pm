@@ -3,6 +3,8 @@ package CatalystX::Resource::TraitFor::Controller::Resource::Show;
 use MooseX::MethodAttributes::Role;
 use namespace::autoclean;
 
+=head1 ACTIONS
+
 =head2 show
 
 display the resource specified by its id, accessible as $c->stash->{resource}

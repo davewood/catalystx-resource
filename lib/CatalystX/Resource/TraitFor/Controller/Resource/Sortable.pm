@@ -9,11 +9,41 @@ requires qw/
     _redirect
 /;
 
-# ABSTRACT: a Sortable CRUD Role for your Controller
+# ABSTRACT: make your Resource sortable
 
 =head1 SYNOPSIS
 
-=cut
+    # TestApp.pm
+    'Controller::Resource::Artist' => {
+        resultset_key => 'artists_rs',
+        resources_key => 'artists',
+        resource_key => 'artist',
+        form_class => 'TestApp::Form::Resource::Artist',
+        model => 'DB::Resource::Artist',
+        redirect_mode => 'list',
+        traits => ['Sortable'],
+        actions => {
+            base => {
+                PathPart => 'artists',
+            },
+        },
+    },
+
+    # TestApp/Schema/Result/Resource/Artist.pm
+    __PACKAGE__->load_components(qw/ Ordered Core /);
+    __PACKAGE__->table('artist');
+    __PACKAGE__->add_columns(
+        ...,
+        'position',
+        {
+            data_type => 'integer',
+            is_numeric => 1,
+            is_nullable => 0,
+        },
+    );
+
+    __PACKAGE__->resultset_attributes({ order_by => 'position' });
+    __PACKAGE__->position_column('position');
 
 =head1 DESCRIPTION
 
@@ -25,10 +55,10 @@ Make sure the schema for your sortable resource has a 'position' column.
     /resource/*/move_previous
     /resource/*/move_next
 
-=cut
+=head1 ACTIONS
 
 =head2 move_next
-    
+
     will switch the resource with the next one
 
 =cut
@@ -47,7 +77,7 @@ sub move_next : Chained('base_with_id') PathPart('move_next') Args(0) {
 }
 
 =head2 move_previous
-    
+
     will switch the resource with the previous one
 
 =cut
