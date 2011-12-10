@@ -37,7 +37,7 @@ __PACKAGE__->config(
         resource_key => 'artist',
         form_class => 'TestApp::Form::Resource::Artist',
         model => 'DB::Resource::Artist',
-        redirect_mode => 'show_parent',
+        redirect_mode => 'list',
         traits => ['Sortable'],
         actions => {
             base => {
@@ -69,7 +69,6 @@ __PACKAGE__->config(
         parents_accessor => 'albums',
         form_class => 'TestApp::Form::Resource::Album',
         model => 'DB::Resource::Album',
-        redirect_mode => 'show_parent',
         actions => {
             base => {
                 PathPart => 'albums',

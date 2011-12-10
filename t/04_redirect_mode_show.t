@@ -33,7 +33,15 @@ my $artist = $schema->resultset('Resource::Artist')->create({
 });
 lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' }); }, 'create album');
 
-# check redirection for redirect_mode = 'list'
+# change redirect_mode to 'show'
+# 'list' is default but we overwrote it in TestApp.pm
+{
+    my ($res, $c) = ctx_request(GET '/');
+    for my $resource (qw/ Artist Concert Album Song /) {
+        my $controller = $c->controller("Resource::$resource");
+        $controller->redirect_mode('show');
+    }
+}
 
 # CREATE
 {
