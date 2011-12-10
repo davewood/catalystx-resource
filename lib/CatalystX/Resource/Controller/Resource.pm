@@ -218,53 +218,6 @@ sub _redirect {
     $c->res->redirect($path);
 }
 
-=head1 ACTIONS
-
-the following actions will be loaded
-
-=head2 base
-
-Starts a chain and puts resultset into stash
-
-For nested resources chain childrens 'base' action
-to parents 'base_with_id' action
-
-=cut
-
-sub base : Chained('') PathPart('') CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-
-    # Store the ResultSet in stash so it's available for other methods
-    # get the model from the controllers config that consumes this role
-    my $resultset;
-    if ( $self->has_parent ) {
-        $resultset = $c->stash->{ $self->parent_key }
-            ->related_resultset( $self->parents_accessor );
-    }
-    else {
-        $resultset = $c->model( $self->model );
-    }
-    $c->stash( $self->resultset_key => $resultset );
-}
-
-=head2 base_with_id
-
-chains to 'base' and puts resource with id into stash
-
-=cut
-
-sub base_with_id : Chained('base') PathPart('') CaptureArgs(1) {
-    my ( $self, $c, $id ) = @_;
-    my $resource = $c->stash->{ $self->resultset_key }->find($id);
-    if ($resource) {
-        $c->stash->{ $self->resource_key } = $resource;
-    }
-    else {
-        $c->stash( error_msg => $self->_msg( $c, 'not_found', $id ) );
-        $c->detach('/error404');
-    }
-}
-
 =head2 _msg
 
 returns notification msg to be displayed
@@ -320,6 +273,53 @@ sub _name {
         ? $resource->name
         : ucfirst( $self->resource_key );
     return $name;
+}
+
+=head1 ACTIONS
+
+the following actions will be loaded
+
+=head2 base
+
+Starts a chain and puts resultset into stash
+
+For nested resources chain childrens 'base' action
+to parents 'base_with_id' action
+
+=cut
+
+sub base : Chained('') PathPart('') CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+
+    # Store the ResultSet in stash so it's available for other methods
+    # get the model from the controllers config that consumes this role
+    my $resultset;
+    if ( $self->has_parent ) {
+        $resultset = $c->stash->{ $self->parent_key }
+            ->related_resultset( $self->parents_accessor );
+    }
+    else {
+        $resultset = $c->model( $self->model );
+    }
+    $c->stash( $self->resultset_key => $resultset );
+}
+
+=head2 base_with_id
+
+chains to 'base' and puts resource with id into stash
+
+=cut
+
+sub base_with_id : Chained('base') PathPart('') CaptureArgs(1) {
+    my ( $self, $c, $id ) = @_;
+    my $resource = $c->stash->{ $self->resultset_key }->find($id);
+    if ($resource) {
+        $c->stash->{ $self->resource_key } = $resource;
+    }
+    else {
+        $c->stash( error_msg => $self->_msg( $c, 'not_found', $id ) );
+        $c->detach('/error404');
+    }
 }
 
 __PACKAGE__->meta->make_immutable();
