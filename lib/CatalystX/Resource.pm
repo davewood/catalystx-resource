@@ -7,15 +7,52 @@ use namespace::autoclean;
 
 =head1 SYNOPSIS
 
+    use Catalyst qw/
+        +CatalystX::Resource
+    /;
+
+    __PACKAGE__->config(
+        'Controller::Resource::Artist' => {
+            resultset_key => 'artists_rs',
+            resources_key => 'artists',
+            resource_key => 'artist',
+            form_class => 'TestApp::Form::Resource::Artist',
+            model => 'DB::Resource::Artist',
+            actions => {
+                base => {
+                    PathPart => 'artists',
+                },
+            },
+        },
+        'CatalystX::Resource' => {
+            controllers => [ qw/ Artist / ],
+         },
+     );
+
 =head1 DESCRIPTION
 
-CatalystX::TraitFor::Controller::Resource enhances the consuming Controller with CRUD
-functionality. It supports nested Resources and File Uploads.
+CatalystX::Resource enhances your App with CRUD functionality.
 
-    base
-        index
-        create
-        base_with_id
+After creating files for HTML::FormHandler, DBIx::Class
+and Template Toolkit templates you get create/edit/delete/show/list
+actions for free.
+
+Resources can be nested.
+(e.g.: Artist has_many Albums)
+
+You can remove actions if you don't need them.
+
+Example, you don't need the edit action:
+    'Controller::Resource::Artist' => {
+        ...,
+        traits => ['-Edit'],
+    },
+    
+Using the Sortable trait your resources are sortable:
+    'Controller::Resource::Artist' => {
+        ...,
+        traits => ['Sortable'],
+    },
 
 =cut
 
