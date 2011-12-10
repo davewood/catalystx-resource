@@ -170,26 +170,12 @@ has 'parents_accessor' => (
     isa => NonEmptySimpleStr,
 );
 
-=head2 redirect_mode
+=head2 redirect_mode list|show|show_parent
 
-redirect after create/edit/delete can be 'show' or 'index'
+After a created/edit/delete action a redirect takes place.
+The redirect behavior can be controlled with the redirect_mode attribute.
 
-default = 'show'
-
-redirect_mode = show:
-    resources/create   => resources/<id>/show
-    resources/1/edit   => resources/1/show
-    resources/1/delete => resources/
-redirect_mode = index:
-    resources/create   => resources/
-    resources/1/edit   => resources/
-    resources/1/delete => resources/
-redirect_mode 'show_parent':
-    path: /parents/1/resources/create   => redirect_path: /parents/1/show
-    path: /parents/1/resources/3/edit   => redirect_path: /parents/1/show
-    path: /parents/1/resources/3/delete => redirect_path: /parents/1/show
-
-ATTENTION: If you add custom edit methods you have to make sure the PathPart starts with 'edit.*'. Otherwise redirection will fail.
+default = 'list'
 
 =cut
 
@@ -199,30 +185,20 @@ has 'redirect_mode' => (
     default => 'list',
 );
 
-# redirect_mode 'list':
-#   path: /parents/1/resources/create   => redirect_path: /parents/1/resources/list
-#   path: /parents/1/resources/3/edit   => redirect_path: /parents/1/resources/list
-#   path: /parents/1/resources/3/delete => redirect_path: /parents/1/resources/list
-# redirect_mode 'show':
-#   path: /parents/1/resources/create   => redirect_path: /parents/1/resources/<id>/show
-#   path: /parents/1/resources/3/edit   => redirect_path: /parents/1/resources/3/show
-#   path: /parents/1/resources/3/delete => redirect_path: /parents/1/resources/list
-# redirect_mode 'show_parent':
-#   path: /parents/1/resources/create   => redirect_path: /parents/1/show
-#   path: /parents/1/resources/3/edit   => redirect_path: /parents/1/show
-#   path: /parents/1/resources/3/delete => redirect_path: /parents/1/show
 sub _redirect {
     my ( $self, $c ) = @_;
 
     my $path;
     my $mode = $self->redirect_mode;
-    my @chain = @{ $c->dispatcher->expand_action( $c->action )->{chain} };
+    my @captures = @{ $c->request->captures };
 
     ########################
     # redirect_mode 'list' #
     ########################
+    # path: /parents/1/resources/create   => redirect_path: /parents/1/resources/list
+    # path: /parents/1/resources/3/edit   => redirect_path: /parents/1/resources/list
+    # path: /parents/1/resources/3/delete => redirect_path: /parents/1/resources/list
     if ( $mode eq 'list' ) {
-        my @captures = @{ $c->request->captures };
         pop(@captures)
             unless $c->action->name eq 'create';
         $path = $c->uri_for_action($self->action_for('list'), \@captures);
@@ -231,8 +207,10 @@ sub _redirect {
     ########################
     # redirect_mode 'show' #
     ########################
+    # path: /parents/1/resources/create   => redirect_path: /parents/1/resources/<id>/show
+    # path: /parents/1/resources/3/edit   => redirect_path: /parents/1/resources/3/show
+    # path: /parents/1/resources/3/delete => redirect_path: /parents/1/resources/list
     elsif ( $mode eq 'show' ) {
-        my @captures = @{ $c->request->captures };
         my $action = $c->action->name;
 
         if ( $action eq 'create' ) {
@@ -252,7 +230,37 @@ sub _redirect {
     ###############################
     # redirect_mode 'show_parent' #
     ###############################
+    # path: /parents/1/resources/create   => redirect_path: /parents/1/show
+    # path: /resources/create             => redirect_path: /resources/list
+    # path: /parents/1/resources/3/edit   => redirect_path: /parents/1/show
+    # path: /resources/3/edit             => redirect_path: /resources/list
+    # path: /parents/1/resources/3/delete => redirect_path: /parents/1/show
+    # path: /resources/3/delete           => redirect_path: /resources/list
     elsif ( $mode eq 'show_parent' ) {
+        if ( $self->has_parent ) {
+            my $action = $c->action->name;
+            my @chain = @{ $c->dispatcher->expand_action( $c->action )->{chain} };
+
+            # base_with_id action of parent
+            my $parent_base_with_id_action;
+            if ($action eq 'create') {
+                $parent_base_with_id_action = $chain[-3];
+            }
+            elsif ($action eq 'edit' || $action eq 'delete') {
+                $parent_base_with_id_action = $chain[-4];
+                pop @captures;
+            }
+
+            # parent namespace
+            my $parent_namespace = $parent_base_with_id_action->{namespace};
+
+            # private path of show action of parent
+            my $parent_show_action_private_path = "$parent_namespace/show";
+            $path = $c->uri_for_action($parent_show_action_private_path, \@captures);
+        }
+        else {
+            $path = $c->uri_for_action($self->action_for('list'));
+        }
     }
 
     $c->res->redirect($path);
