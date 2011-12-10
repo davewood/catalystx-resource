@@ -29,6 +29,7 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key ('id');
 __PACKAGE__->resultset_attributes({ order_by => 'position' });
 __PACKAGE__->position_column('position');
+__PACKAGE__->grouping_column('album_id');
 
 __PACKAGE__->belongs_to(
     'album',

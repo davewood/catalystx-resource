@@ -55,6 +55,12 @@ Make sure the schema for your sortable resource has a 'position' column.
     /resource/*/move_previous
     /resource/*/move_next
 
+For nested resources you need to set a grouping_column
+Example: Artist has_many Albums has_many Songs
+
+    # TestApp/Schema/Result/Resource/Song.pm
+    __PACKAGE__->grouping_column('album_id');
+
 =head1 ACTIONS
 
 =head2 move_next
