@@ -43,6 +43,22 @@ __PACKAGE__->config(
             },
         },
     },
+    'Controller::Resource::Concert' => {
+        resultset_key => 'concerts_rs',
+        resources_key => 'concerts',
+        resource_key => 'concert',
+        parent_key => 'artist',
+        parents_accessor => 'concerts',
+        form_class => 'TestApp::Form::Resource::Concert',
+        model => 'DB::Resource::Concert',
+        traits => ['-Delete'],
+        actions => {
+            base => {
+                PathPart => 'concerts',
+                Chained  => '/resource/artist/base_with_id',
+            },
+        },
+    },
     'Controller::Resource::Album' => {
         resultset_key => 'albums_rs',
         resources_key => 'albums',
@@ -58,26 +74,15 @@ __PACKAGE__->config(
             },
         },
     },
-    'Controller::Resource::Concert' => {
-        resultset_key => 'concerts_rs',
-        resources_key => 'concerts',
-        resource_key => 'concert',
-        form_class => 'TestApp::Form::Resource::Concert',
-        model => 'DB::Resource::Concert',
-        traits => ['-Delete'],
-        actions => {
-            base => {
-                PathPart => 'concerts',
-                Chained  => '/resource/artist/base_with_id',
-            },
-        },
-    },
     'Controller::Resource::Song' => {
         resultset_key => 'songs_rs',
         resources_key => 'songs',
         resource_key => 'song',
         form_class => 'TestApp::Form::Resource::Song',
         model => 'DB::Resource::Song',
+        parent_key => 'album',
+        parents_accessor => 'songs',
+        traits => ['Sortable'],
         actions => {
             base => {
                 PathPart => 'songs',

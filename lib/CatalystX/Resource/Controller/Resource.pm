@@ -24,72 +24,6 @@ __PACKAGE__->config(
     /],
 );
 
-=head1 SYNOPSIS
-
-    # a Resource Controller
-    package MyApp::Controller::CDs;
-    with 'CatalystX::TraitFor::Controller::Resource';
-    __PACKAGE__->config(
-        resultset_key   => 'cds_rs',
-        resources_key   => 'cds',
-        resource_key    => 'cd',
-        model           => 'DB::CDs',
-        form_class      => 'MyApp::Form::CDs',
-        form_template   => 'cds/form.tt',
-        redirect_mode   => 'show',
-        actions         => {
-            base => {
-                PathPart    => 'cds',
-            },
-        },
-    );
-
-    # a nested Resource Controller
-    package MyApp::Controller::Tracks;
-    with 'CatalystX::TraitFor::Controller::Resource';
-    __PACKAGE__->config(
-        parent_key         => 'cd',
-        parents_accessor   => 'tracks',
-        resultset_key      => 'tracks_rs',
-        resources_key      => 'tracks',
-        resource_key       => 'track',
-        model              => 'DB::Tracks',
-        form_class         => 'MyApp::Form::Tracks',
-        form_template      => 'tracks/form.tt',
-        actions            => {
-            base => {
-                PathPart    => 'tracks',
-                Chained     => '/cds/base_with_id',
-            },
-        },
-    );
-
-=head1 DESCRIPTION
-
-CatalystX::TraitFor::Controller::Resource enhances the consuming Controller with CRUD
-functionality. It supports nested Resources and File Uploads.
-
-    base
-        index
-        create
-        base_with_id
-            show
-            edit
-            delete
-
-=head1 File Upload
-
-    if your form includes a file upload you have to
-    set the file param so HTML::FormHandler can work its magic
-    (e.g.: in the Controller consuming this role)
-
-        before 'form' => sub {
-            my ( $self, $c, $resource ) = @_;
-            if ($c->req->method eq 'POST') {
-                $c->req->params->{'file'} = $c->req->upload('file');
-            }
-        };
-
 =head1 ATTRIBUTES
 
 =head2 model
@@ -180,7 +114,7 @@ default = 'list'
 =cut
 
 has 'redirect_mode' => (
-    is      => 'ro',
+    is      => 'rw',
     isa     => NonEmptySimpleStr,
     default => 'list',
 );
@@ -270,6 +204,10 @@ sub _redirect {
 
 the following paths will be loaded
 
+=head2 base
+
+Starts a chain and puts resultset into stash
+
 =cut
 
 sub base : Chained('') PathPart('') CaptureArgs(0) {
@@ -287,6 +225,12 @@ sub base : Chained('') PathPart('') CaptureArgs(0) {
     }
     $c->stash( $self->resultset_key => $resultset );
 }
+
+=head2
+
+chains to 'base' and puts resource with id into stash
+
+=cut
 
 sub base_with_id : Chained('base') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
@@ -313,6 +257,12 @@ sub list : Chained('base') PathPart('list') Args(0) {
     );
 }
 
+=head2 _msg
+
+returns notification msg to be displayed
+
+=cut
+
 sub _msg {
     my ( $self, $c, $action, $id ) = @_;
 
@@ -336,7 +286,23 @@ sub _msg {
             ? $c->loc( 'resources.deleted', $self->_name($c) )
             : $self->_name($c) . " deleted.";
     }
+    elsif ( $action eq 'move_next' ) {
+        return $c->can('loc')
+            ? $c->loc( 'resources.moved_next', $self->_name($c) )
+            : $self->_name($c) . " moved next.";
+    }
+    elsif ( $action eq 'move_previous' ) {
+        return $c->can('loc')
+            ? $c->loc( 'resources.moved_previous', $self->_name($c) )
+            : $self->_name($c) . " moved previous.";
+    }
 }
+
+=head2
+
+get a meaningful name for the resource
+
+=cut
 
 sub _name {
     my ( $self, $c ) = @_;
