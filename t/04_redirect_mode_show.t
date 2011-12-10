@@ -123,7 +123,7 @@ lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' });
     is($uri->path, '/artists/2/albums/list');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
-    unlike($content, '/show>Es gibt Reis, Baby/', 'resource has been deleted');
+    unlike($content, '/show">Es gibt Reis, Baby/', 'resource has been deleted');
     like($content, '/Es gibt Reis, Baby deleted/', 'check delete success notification');
     ok(request($path)->code == 404, "Already deleted $path returns HTTP 404");
 }
