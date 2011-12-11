@@ -36,7 +36,7 @@ required, the DBIC model associated with this resource. (e.g.: 'DB::CDs')
 
 has 'model' => (
     is       => 'ro',
-    #isa      => 'DBIx::Class::Resultset',
+    isa      => NonEmptySimpleStr,
     required => 1,
 );
 
