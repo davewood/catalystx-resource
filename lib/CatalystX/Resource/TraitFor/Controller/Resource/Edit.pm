@@ -3,6 +3,8 @@ package CatalystX::Resource::TraitFor::Controller::Resource::Edit;
 use MooseX::MethodAttributes::Role;
 use namespace::autoclean;
 
+# ABSTRACT: a edit action for your resource
+
 requires qw/
     form
 /;

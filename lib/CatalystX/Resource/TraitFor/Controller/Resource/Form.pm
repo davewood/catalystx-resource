@@ -4,6 +4,8 @@ use MooseX::MethodAttributes::Role;
 use MooseX::Types::LoadableClass qw/ LoadableClass /;
 use namespace::autoclean;
 
+# ABSTRACT: handles form related stuff
+
 requires qw/
     resource_key
     _msg

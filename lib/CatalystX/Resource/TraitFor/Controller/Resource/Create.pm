@@ -3,6 +3,8 @@ package CatalystX::Resource::TraitFor::Controller::Resource::Create;
 use MooseX::MethodAttributes::Role;
 use namespace::autoclean;
 
+# ABSTRACT: a create action for your resource
+
 requires qw/
     resultset_key
     resource_key

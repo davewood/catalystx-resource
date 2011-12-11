@@ -3,6 +3,8 @@ package CatalystX::Resource::TraitFor::Controller::Resource::Sortable;
 use MooseX::MethodAttributes::Role;
 use namespace::autoclean;
 
+# ABSTRACT: makes your resource sortable
+
 requires qw/
     _msg
     resource_key

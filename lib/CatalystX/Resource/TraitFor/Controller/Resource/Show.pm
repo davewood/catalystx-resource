@@ -3,6 +3,8 @@ package CatalystX::Resource::TraitFor::Controller::Resource::Show;
 use MooseX::MethodAttributes::Role;
 use namespace::autoclean;
 
+# ABSTRACT: a show action for your resource
+
 =head1 ACTIONS
 
 =head2 show

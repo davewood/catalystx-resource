@@ -3,6 +3,8 @@ package CatalystX::Resource::TraitFor::Controller::Resource::Delete;
 use MooseX::MethodAttributes::Role;
 use namespace::autoclean;
 
+# ABSTRACT: a delete action for your resource
+
 requires qw/
     resource_key
     _msg
