@@ -32,13 +32,21 @@ __PACKAGE__->config(
         render_die => 1,
     },
     'Controller::Resource::Artist' => {
+        # stash key of dbic resultset
         resultset_key => 'artists_rs',
+        # stash key to referencing all artists
         resources_key => 'artists',
+        # stash key to reference one artist
         resource_key => 'artist',
+        # class name of the HTML::FormHandler class
         form_class => 'TestApp::Form::Resource::Artist',
+        # name of the Artists model
         model => 'DB::Resource::Artist',
+        # how the app redirects after create/edit/delete/...
         redirect_mode => 'list',
+        # add trait or remove default trait
         traits => ['Sortable'],
+        # activate inactivated form fields
         activate_fields_create => [ qw/ password password_repeat /],
         actions => {
             base => {
