@@ -2,6 +2,8 @@ package CatalystX::Resource::Controller::Resource;
 use Moose;
 use namespace::autoclean;
 
+# ABSTRACT: Base Controller for Resources
+
 BEGIN { extends 'Catalyst::Controller'; }
 
 use MooseX::Types::Moose qw/ ArrayRef /;
