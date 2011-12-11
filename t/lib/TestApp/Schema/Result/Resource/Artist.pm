@@ -14,11 +14,13 @@ __PACKAGE__->add_columns(
     name => {
         data_type => 'varchar',
     },
+    password => {
+        data_type => 'varchar',
+    },
     'position',
     {
         data_type => 'integer',
         is_numeric => 1,
-        is_nullable => 0,
     },
 );
 

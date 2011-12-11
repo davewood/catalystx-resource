@@ -39,6 +39,7 @@ __PACKAGE__->config(
         model => 'DB::Resource::Artist',
         redirect_mode => 'list',
         traits => ['Sortable'],
+        activate_fields_create => [ qw/ password password_repeat /],
         actions => {
             base => {
                 PathPart => 'artists',

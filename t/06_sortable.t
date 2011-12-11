@@ -24,8 +24,8 @@ lives_ok(sub { $schema->deploy }, 'deploy schema');
 
 # populate DB
 my $artist;
-lives_ok(sub { $artist = $schema->resultset('Resource::Artist')->create({ id => 1, name => 'davewood' }); }, 'create artist');
-lives_ok(sub { $schema->resultset('Resource::Artist')->create({ id => 2, name => 'flipper' }); }, 'create artist');
+lives_ok(sub { $artist = $schema->resultset('Resource::Artist')->create({ id => 1, name => 'davewood', password => 'asdf' }); }, 'create artist');
+lives_ok(sub { $schema->resultset('Resource::Artist')->create({ id => 2, name => 'flipper', password => 'asdf' }); }, 'create artist');
 
 my $album;
 lives_ok(sub { $album = $artist->albums->create({ id => 1, name => 'Mach et einfach!' }); }, 'create album');

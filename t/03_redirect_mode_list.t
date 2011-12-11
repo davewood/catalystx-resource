@@ -26,10 +26,12 @@ lives_ok(sub { $schema->deploy }, 'deploy schema');
 $schema->resultset('Resource::Artist')->create({
     id => 1,
     name => 'davewood',
+    password => 'asdf',
 });
 my $artist = $schema->resultset('Resource::Artist')->create({
     id => 2,
     name => 'flipper',
+    password => 'asdf',
 });
 lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' }); }, 'create album');
 
@@ -54,7 +56,7 @@ lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' });
     my $res = request($path);
     ok($res->is_success, "$path returns HTTP 200");
     like($res->decoded_content, '/method="post"/', "$path content contains 'method=\"post\"'");
-    $res = request(POST $path, [ name => 'simit' ]);
+    $res = request(POST $path, [ name => 'simit', password => 'asdf', password_repeat => 'asdf' ]);
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path, '/artists/list');

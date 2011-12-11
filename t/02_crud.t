@@ -25,10 +25,12 @@ lives_ok(sub { $schema->deploy }, 'deploy schema');
 $schema->resultset('Resource::Artist')->create({
     id => 1,
     name => 'davewood',
+    password => 'asdf',
 });
 my $artist = $schema->resultset('Resource::Artist')->create({
     id => 2,
     name => 'flipper',
+    password => 'asdf',
 });
 
 lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' }); }, 'create album');
@@ -74,8 +76,8 @@ lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' });
     my $path ='/artists/create';
     my $res = request($path);
     ok($res->is_success, "$path returns HTTP 200");
-    like($res->decoded_content, '/method="post"/', "$path content contains 'method=\"post\"'");
-    $res = request(POST $path, [ name => 'simit' ]);
+    like($res->decoded_content, '/method="post".*password/s', "$path content contains 'method=\"post\"'");
+    $res = request(POST $path, [ name => 'simit', password => 'asdf', password_repeat => 'asdf' ]);
     ok($res->is_redirect, "$path returns HTTP 302");
     $path ='/artists/list';
     $res = request($path);
@@ -87,8 +89,10 @@ lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' });
     my $path ='/artists/2/edit';
     my $res = request($path);
     ok($res->is_success, "$path returns HTTP 200");
-    like($res->decoded_content, '/method="post"/', "$path content contains 'method=\"post\"'");
-    like($res->decoded_content, '/flipper/', "$path content contains 'flipper'");
+    my $content = $res->decoded_content;
+    like($content, '/method="post"/', "$path content contains 'method=\"post\"'");
+    like($content, '/flipper/', "$path content contains 'flipper'");
+    unlike($content, '/password/', "$path does not contain 'password'");
     $res = request(POST $path, [ name => 'willy' ]);
     ok($res->is_redirect, "$path returns HTTP 302");
     $path ='/artists/2/show';
