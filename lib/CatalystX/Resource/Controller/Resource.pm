@@ -13,6 +13,7 @@ with qw/
     CatalystX::Component::Traits
 /;
 
+# merge traits from app config with local traits
 has '+_trait_merge' => (default => 1);
 
 __PACKAGE__->config(
