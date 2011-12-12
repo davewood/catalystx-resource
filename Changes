@@ -1,2 +1,5 @@
+0.02 2011-12-12
+    * fixed missing dependency Catalyst::Plugin::Session::State::Cookie
+
 0.01 2011-12-11
     * first trial release
