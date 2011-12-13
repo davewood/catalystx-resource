@@ -5,7 +5,7 @@ use namespace::autoclean;
 use Catalyst qw/
     +CatalystX::Resource
     Session
-    Session::Store::FastMmap
+    Session::Store::File
     Session::State::Cookie
 /;
 extends 'Catalyst';
