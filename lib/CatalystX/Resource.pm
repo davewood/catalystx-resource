@@ -63,7 +63,7 @@ after 'setup_components' => sub {
         CatalystX::InjectComponent->inject(
             into => $class,
             component => 'CatalystX::Resource::Controller::Resource',
-            as => 'Controller::Resource::' . $controller,
+            as => 'Controller::' . $controller,
         );
     }
 };
