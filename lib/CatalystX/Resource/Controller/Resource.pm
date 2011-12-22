@@ -4,7 +4,7 @@ use namespace::autoclean;
 
 # ABSTRACT: Base Controller for Resources
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'Catalyst::Controller::ActionRole'; }
 
 use MooseX::Types::Moose qw/ ArrayRef /;
 use MooseX::Types::Common::String qw/ NonEmptySimpleStr /;
@@ -25,6 +25,7 @@ __PACKAGE__->config(
         Create
         Edit
     /],
+    action_roles => ['MatchRequestMethod'],
 );
 
 =head1 ATTRIBUTES

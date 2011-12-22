@@ -13,7 +13,7 @@ display the resource specified by its id, accessible as $c->stash->{resource}
 
 =cut
 
-sub show : Chained('base_with_id') PathPart('show') Args(0) {
+sub show : Method('GET') Chained('base_with_id') PathPart('show') Args(0) {
     my ( $self, $c ) = @_;
 }
 

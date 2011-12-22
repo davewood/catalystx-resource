@@ -34,7 +34,7 @@ edit a specific resource
 
 =cut
 
-sub edit : Chained('base_with_id') PathPart('edit') Args(0) {
+sub edit : Method('GET') Method('POST') Chained('base_with_id') PathPart('edit') Args(0) {
     my ( $self, $c ) = @_;
     $c->stash( set_update_msg => 1 );
     $self->form( $c, $self->activate_fields_edit );

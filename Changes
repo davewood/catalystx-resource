@@ -1,3 +1,7 @@
+0.001_004 2011-12-22
+    * Controller::Resource extends from C::C::ActionRole
+    * actions must match method enforced with C::AR::MatchRequestMethod
+
 0.001_003 2011-12-13
     * add missing dependencies
 

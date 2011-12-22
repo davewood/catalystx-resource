@@ -18,7 +18,7 @@ display list (index) of all resources
 
 =cut
 
-sub list : Chained('base') PathPart('list') Args(0) {
+sub list : Method('GET') Chained('base') PathPart('list') Args(0) {
     my ( $self, $c ) = @_;
     $c->stash(
         $self->resources_key => [ $c->stash->{ $self->resultset_key }->all ]

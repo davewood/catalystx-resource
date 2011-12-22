@@ -39,7 +39,7 @@ create a resource
 
 =cut
 
-sub create : Chained('base') PathPart('create') Args(0) {
+sub create : Method('GET') Method('POST') Chained('base') PathPart('create') Args(0) {
     my ( $self, $c ) = @_;
     my $resource = $c->stash->{ $self->resultset_key }->new_result( {} );
     $c->stash(

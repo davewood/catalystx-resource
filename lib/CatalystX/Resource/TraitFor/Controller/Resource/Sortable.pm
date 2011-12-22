@@ -71,17 +71,12 @@ Example: Artist has_many Albums has_many Songs
 
 =cut
 
-sub move_next : Chained('base_with_id') PathPart('move_next') Args(0) {
+sub move_next : Method('POST') Chained('base_with_id') PathPart('move_next') Args(0) {
     my ( $self, $c ) = @_;
-    if ($c->req->method eq 'POST') {
-        my $resource = $c->stash->{ $self->resource_key };
-        $resource->move_next;
-        $c->flash( msg => $self->_msg( $c, 'move_next' ) );
-        $self->_redirect($c);
-    }
-    else {
-        $c->detach('/error404');
-    }
+    my $resource = $c->stash->{ $self->resource_key };
+    $resource->move_next;
+    $c->flash( msg => $self->_msg( $c, 'move_next' ) );
+    $self->_redirect($c);
 }
 
 =head2 move_previous
@@ -90,17 +85,12 @@ sub move_next : Chained('base_with_id') PathPart('move_next') Args(0) {
 
 =cut
 
-sub move_previous : Chained('base_with_id') PathPart('move_previous') Args(0) {
+sub move_previous : Method('POST') Chained('base_with_id') PathPart('move_previous') Args(0) {
     my ( $self, $c ) = @_;
-    if ($c->req->method eq 'POST') {
-        my $resource = $c->stash->{ $self->resource_key };
-        $resource->move_previous;
-        $c->flash( msg => $self->_msg( $c, 'move_previous' ) );
-        $self->_redirect($c);
-    }
-    else {
-        $c->detach('/error404');
-    }
+    my $resource = $c->stash->{ $self->resource_key };
+    $resource->move_previous;
+    $c->flash( msg => $self->_msg( $c, 'move_previous' ) );
+    $self->_redirect($c);
 }
 
 1;
