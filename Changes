@@ -1,3 +1,6 @@
+0.001_005 2012-01-07
+    * added trait MergeUploadParams and test
+
 0.001_004 2011-12-22
     * Controller::Resource extends from C::C::ActionRole
     * actions must match method enforced with C::AR::MatchRequestMethod

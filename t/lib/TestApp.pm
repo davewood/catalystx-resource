@@ -45,7 +45,7 @@ __PACKAGE__->config(
         # how the app redirects after create/edit/delete/...
         redirect_mode => 'list',
         # add trait or remove default trait
-        traits => ['Sortable'],
+        traits => ['Sortable', 'MergeUploadParams'],
         # activate inactivated form fields
         activate_fields_create => [ qw/ password password_repeat /],
         actions => {
