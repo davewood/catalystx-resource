@@ -54,6 +54,11 @@ Using the Sortable trait your resources are sortable:
         traits => ['Sortable'],
     },
 
+=head1 CAVEAT
+
+CatalystX::Resource detaches to '/error404' if a resource cannot be found.
+Make sure you implement this action in your App.
+
 =cut
 
 after 'setup_components' => sub {
