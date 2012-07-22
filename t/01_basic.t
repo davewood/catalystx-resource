@@ -57,8 +57,10 @@ my $testapp = new_ok ( 'TestApp' );
         ok ( defined($action), "Controller has '$action_name' action." );
     }
 
-    # Delete trait has been removed in TestApp.pm
-    ok ( !$controller->can('delete') );
+    ok (
+        !$controller->does('CatalystX::Resource::TraitFor::Controller::Resource::Delete'),
+        'Delete trait not available'
+    );
 
     can_ok ( $controller, 'form' );
 }
