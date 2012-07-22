@@ -102,6 +102,7 @@ __PACKAGE__->config(
         },
     },
     'CatalystX::Resource' => {
+        error_path => '/error404',
         controllers => [ qw/
             Resource::Artist
             Resource::Concert

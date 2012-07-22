@@ -123,6 +123,18 @@ has 'redirect_mode' => (
     default => 'list',
 );
 
+=head2 error_path
+
+documented in L<CatalystX::Resource>
+
+=cut
+
+has 'error_path' => (
+    is      => 'ro',
+    isa     => NonEmptySimpleStr,
+    default => '/default',
+);
+
 =head1 METHODS
 
 =head2 _redirect
@@ -322,7 +334,7 @@ sub base_with_id : Chained('base') PathPart('') CaptureArgs(1) {
     }
     else {
         $c->stash( error_msg => $self->_msg( $c, 'not_found', $id ) );
-        $c->detach('/error404');
+        $c->detach( $self->error_path );
     }
 }
 

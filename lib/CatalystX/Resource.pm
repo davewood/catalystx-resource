@@ -18,6 +18,7 @@ use namespace::autoclean;
             resource_key => 'artist',
             form_class => 'TestApp::Form::Resource::Artist',
             model => 'DB::Resource::Artist',
+            error_path => '/error',
             actions => {
                 base => {
                     PathPart => 'artists',
@@ -47,17 +48,27 @@ Example, you don't need the edit action:
         ...,
         traits => ['-Edit'],
     },
-    
+
 Using the Sortable trait your resources are sortable:
     'Controller::Resource::Artist' => {
         ...,
         traits => ['Sortable'],
     },
 
+=head1 CONFIG
+
+=head2 controllers
+
+array ref of controller names which will be injected into your app
+
+=head2 error_path
+
+where to detach to in case of an error (default: '/default')
+
 =head1 CAVEAT
 
-CatalystX::Resource detaches to '/error404' if a resource cannot be found.
-Make sure you implement this action in your App.
+CatalystX::Resource detaches to $self->error_path if a resource cannot be found.
+Make sure you implement this action in your App. (default: '/default')
 
 =head1 SEE ALSO
 
@@ -68,12 +79,18 @@ as a web service.
 
 after 'setup_components' => sub {
     my $class = shift;
-    my $controllers = $class->config->{'CatalystX::Resource'}{'controllers'};
+
+    my $config      = $class->config->{'CatalystX::Resource'};
+    my $controllers = $config->{controllers};
+
     for my $controller (@$controllers) {
+        my $controller_name = 'Controller::' . $controller;
+        $class->config->{$controller_name}{error_path} = $config->{error_path}
+            if exists $config->{error_path};
         CatalystX::InjectComponent->inject(
-            into => $class,
+            into      => $class,
             component => 'CatalystX::Resource::Controller::Resource',
-            as => 'Controller::' . $controller,
+            as        => $controller_name,
         );
     }
 };

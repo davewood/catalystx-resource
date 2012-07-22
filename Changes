@@ -1,3 +1,6 @@
+0.001_006 2012-0722-
+    * customizable error_path.
+
 0.001_005 2012-01-07
     * added trait MergeUploadParams and test
 
