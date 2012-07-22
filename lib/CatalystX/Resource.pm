@@ -59,6 +59,11 @@ Using the Sortable trait your resources are sortable:
 CatalystX::Resource detaches to '/error404' if a resource cannot be found.
 Make sure you implement this action in your App.
 
+=head1 SEE ALSO
+
+Check out L<Catalyst::Controller::DBIC::API> if you want to provide your data
+as a web service.
+
 =cut
 
 after 'setup_components' => sub {
