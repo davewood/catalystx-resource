@@ -1,4 +1,8 @@
-0.001_006 2012-0722-
+0.002000 2012-07-23
+    * fixed tests
+    * first stable release
+
+0.001_006 2012-07-22
     * customizable error_path.
 
 0.001_005 2012-01-07
