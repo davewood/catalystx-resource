@@ -17,7 +17,7 @@ __PACKAGE__->config(
     name => 'TestApp',
     'Plugin::Session' => {
         storage        => tempdir(CLEANUP => 1),
-        flash_to_stash => 1.
+        flash_to_stash => 1,
     },
     'Model::DB' => {
         connect_info => {

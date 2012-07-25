@@ -1,3 +1,6 @@
+0.002002 2012-07-25
+    * fixed typo in config
+
 0.002001 2012-07-25
     * use tempdir for session data of TestApp and cleanup afterwards
 
