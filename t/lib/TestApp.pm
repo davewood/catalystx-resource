@@ -67,6 +67,7 @@ __PACKAGE__->config(
         form_class => 'TestApp::Form::Resource::Concert',
         model => 'DB::Resource::Concert',
         traits => ['-Delete'],
+        identifier_columns => [ 'location' ],
         actions => {
             base => {
                 PathPart => 'concerts',

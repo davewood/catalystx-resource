@@ -32,6 +32,9 @@ my $artist = $schema->resultset('Resource::Artist')->create({
     name => 'flipper',
     password => 'asdf',
 });
+my $concert = $artist->concerts->create({
+    location => 'Madison Cube Garden',
+});
 
 lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' }); }, 'create album');
 
@@ -41,6 +44,19 @@ lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' });
     my $res = request($path);
     ok($res->is_success, "$path returns HTTP 200");
     like($res->decoded_content, '/TestApp/', "$path content contains string 'TestApp'");
+}
+
+# identifier_columns
+{
+    my $path = '/artists/' . $artist->id . '/concerts/'. $concert->id .  '/edit';
+    #my $res = request(POST $path);
+    my $res = request(POST $path, [ location => 'Madison Square Garden' ]);
+    ok($res->is_redirect, "$path returns HTTP 302");
+    my $uri = URI->new($res->header('location'));
+    is($uri->path, '/artists/' . $artist->id . '/concerts/list');
+    my $cookie = $res->header('Set-Cookie');
+    my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
+    like($content, '/Madison Square Garden updated/', 'check delete success notification');
 }
 
 # SHOW

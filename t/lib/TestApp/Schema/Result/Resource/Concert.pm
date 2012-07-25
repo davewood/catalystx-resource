@@ -15,7 +15,7 @@ __PACKAGE__->add_columns(
         data_type => 'int',
         is_numeric => 1,
     },
-    name => {
+    location => {
         data_type => 'varchar',
     },
 );
