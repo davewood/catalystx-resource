@@ -42,6 +42,27 @@ has 'model' => (
     required => 1,
 );
 
+=head2 identifier_columns
+
+ArrayRef of column names used as name in messages.
+
+if you edit, delete, ... a resource a msg is stored in the stash.
+the first defined value of the provided columns will be used.
+
+example: "Resource 'Michael Jackson' has been deleted."
+
+default: [ 'name', 'title' ]
+
+if no identifier is found the resource_key is used
+
+=cut
+
+has 'identifier_columns' => (
+    is      => 'ro',
+    isa     => 'ArrayRef',
+    default => sub {[ qw/ name title / ]},
+);
+
 =head2 resultset_key
 
 stash key used to store the resultset of this resource. (e.g.: 'cds_rs')
@@ -250,45 +271,52 @@ sub _msg {
     }
     elsif ( $action eq 'create' ) {
         return $c->can('loc')
-            ? $c->loc( 'resources.created', $self->_name($c) )
-            : $self->_name($c) . " created.";
+            ? $c->loc( 'resources.created', $self->_identifier($c) )
+            : $self->_identifier($c) . " created.";
     }
     elsif ( $action eq 'update' ) {
         return $c->can('loc')
-            ? $c->loc( 'resources.updated', $self->_name($c) )
-            : $self->_name($c) . " updated.";
+            ? $c->loc( 'resources.updated', $self->_identifier($c) )
+            : $self->_identifier($c) . " updated.";
     }
     elsif ( $action eq 'delete' ) {
         return $c->can('loc')
-            ? $c->loc( 'resources.deleted', $self->_name($c) )
-            : $self->_name($c) . " deleted.";
+            ? $c->loc( 'resources.deleted', $self->_identifier($c) )
+            : $self->_identifier($c) . " deleted.";
     }
     elsif ( $action eq 'move_next' ) {
         return $c->can('loc')
-            ? $c->loc( 'resources.moved_next', $self->_name($c) )
-            : $self->_name($c) . " moved next.";
+            ? $c->loc( 'resources.moved_next', $self->_identifier($c) )
+            : $self->_identifier($c) . " moved next.";
     }
     elsif ( $action eq 'move_previous' ) {
         return $c->can('loc')
-            ? $c->loc( 'resources.moved_previous', $self->_name($c) )
-            : $self->_name($c) . " moved previous.";
+            ? $c->loc( 'resources.moved_previous', $self->_identifier($c) )
+            : $self->_identifier($c) . " moved previous.";
     }
 }
 
-=head2 _name
+=head2 _identifier
 
-get a meaningful name for the resource
+return an identifier for the resource
 
 =cut
 
-sub _name {
+sub _identifier {
     my ( $self, $c ) = @_;
     my $resource = $c->stash->{ $self->resource_key };
-    my $name
-        = $resource->result_source->has_column('name')
-        ? $resource->name
-        : ucfirst( $self->resource_key );
-    return $name;
+
+    for my $col (@{ $self->identifier_columns }) {
+        if (
+            $resource->result_source->has_column( $col )
+            && defined $resource->$col
+            && $resource->$col
+        ) {
+            return $resource->$col
+        }
+    }
+
+    return ucfirst( $self->resource_key );
 }
 
 =head1 ACTIONS
