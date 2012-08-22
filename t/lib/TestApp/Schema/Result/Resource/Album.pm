@@ -34,4 +34,16 @@ __PACKAGE__->has_many(
    'album_id'
 );
 
+__PACKAGE__->has_many(
+   'artworks',
+   'TestApp::Schema::Result::Resource::Artwork',
+   'album_id'
+);
+
+__PACKAGE__->has_many(
+   'lyrics',
+   'TestApp::Schema::Result::Resource::Lyric',
+   'album_id'
+);
+
 1;

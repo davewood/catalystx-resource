@@ -1,3 +1,6 @@
+0.002004 2012-08-22
+    * fixed redirect for move_next/move_previous actions
+
 0.002003 2012-07-25
     * config option for identifier column of resource
 

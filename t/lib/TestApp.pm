@@ -106,6 +106,40 @@ __PACKAGE__->config(
             },
         },
     },
+    'Controller::Resource::Artwork' => {
+        resultset_key => 'artworks_rs',
+        resources_key => 'artworks',
+        resource_key => 'artwork',
+        form_class => 'TestApp::Form::Resource::Artwork',
+        model => 'DB::Resource::Artwork',
+        parent_key => 'album',
+        parents_accessor => 'artworks',
+        redirect_mode => 'show_parent',
+        traits => ['Sortable', '-List'],
+        actions => {
+            base => {
+                PathPart => 'artworks',
+                Chained  => '/resource/album/base_with_id',
+            },
+        },
+    },
+    'Controller::Resource::Lyric' => {
+        resultset_key => 'lyrics_rs',
+        resources_key => 'lyrics',
+        resource_key => 'lyric',
+        form_class => 'TestApp::Form::Resource::Lyric',
+        model => 'DB::Resource::Lyric',
+        parent_key => 'album',
+        parents_accessor => 'lyrics',
+        redirect_mode => 'show',
+        traits => ['Sortable', '-List'],
+        actions => {
+            base => {
+                PathPart => 'lyrics',
+                Chained  => '/resource/album/base_with_id',
+            },
+        },
+    },
     'CatalystX::Resource' => {
         error_path => '/error404',
         controllers => [ qw/
@@ -113,6 +147,8 @@ __PACKAGE__->config(
             Resource::Concert
             Resource::Album
             Resource::Song
+            Resource::Artwork
+            Resource::Lyric
         / ],
      },
 );
