@@ -55,12 +55,15 @@ sub form {
     my $resource = $c->stash->{ $self->resource_key };
 
     # activate_form_fields in stash overrides activate_fields from config
-    my $activate_form_fields = $c->stash->{activate_form_fields}
-        || [@$activate_fields];
+    my $activate_form_fields =
+      exists $c->stash->{activate_form_fields}
+      ? $c->stash->{activate_form_fields}
+      : [@$activate_fields];
 
     # if you want to pass additional attributes to the form put a hashref in
     # the stash key 'form_attrs'
-    my $form_attrs = $c->stash->{form_attrs} || {};
+    my $form_attrs =
+      exists $c->stash->{form_attrs} ? $c->stash->{form_attrs} : {};
 
     my $form = $self->form_class->new(%$form_attrs);
     $form->process(
