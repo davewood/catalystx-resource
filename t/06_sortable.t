@@ -24,8 +24,28 @@ lives_ok(sub { $schema->deploy }, 'deploy schema');
 
 # populate DB
 my $artist;
-lives_ok(sub { $artist = $schema->resultset('Resource::Artist')->create({ id => 1, name => 'davewood', password => 'asdf' }); }, 'create artist');
-lives_ok(sub { $schema->resultset('Resource::Artist')->create({ id => 2, name => 'flipper', password => 'asdf' }); }, 'create artist');
+lives_ok(
+    sub {
+        $artist = $schema->resultset('Resource::Artist')->create(
+            {   id       => 1,
+                name     => 'davewood',
+                password => 'asdf',
+            }
+        );
+    },
+    'create artist davewood'
+);
+lives_ok(
+    sub {
+        $schema->resultset('Resource::Artist')->create(
+            {   id       => 2,
+                name     => 'flipper',
+                password => 'asdf'
+            }
+        );
+    },
+    'create artist flipper'
+);
 
 my $album;
 lives_ok(sub { $album = $artist->albums->create({ id => 1, name => 'Mach et einfach!' }); }, 'create album');
@@ -70,6 +90,21 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/davewood moved previous/', 'check move_previous success notification');
     like($content, '/davewood<\/a>.*flipper/s', 'resource has been moved to previous position');
+}
+
+# move_to
+{
+    my $path ='/artists/1/move_to/2';
+    my $res = request($path);
+    ok($res->is_error, "GET $path returns HTTP 404");
+    $res = request(POST $path);
+    ok($res->is_redirect, "$path returns HTTP 302");
+    my $uri = URI->new($res->header('location'));
+    is($uri->path, '/artists/list');
+    my $cookie = $res->header('Set-Cookie');
+    my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
+    like($content, '/davewood moved./', 'check move_to success notification');
+    like($content, '/flipper<\/a>.*davewood/s', 'resource has been moved to position 2');
 }
 
 # nested resources

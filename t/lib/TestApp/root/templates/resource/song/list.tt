@@ -6,5 +6,8 @@
     <form method="post" action="[% c.uri_for(c.controller('Resource::Song').action_for('move_next'), [ artist.id, album.id, song.id ] ) %]">
         <input type="submit" value="move next">
     </form>
+    <form method="post" action="[% c.uri_for(c.controller('Resource::Song').action_for('move_to'), [ artist.id, album.id, song.id ], 4 ) %]">
+        <input type="submit" value="move to pos 4">
+    </form>
     <br/>
 [% END %]

@@ -160,7 +160,7 @@ has 'error_path' => (
 
 =head2 _redirect
 
-redirect request after create/edit/delete/move_next/move_previous
+redirect request after create/edit/delete/move_next/move_previous/move_to
 
 =cut
 
@@ -179,6 +179,7 @@ sub _redirect {
     # path: /parents/1/resources/3/edit      => redirect_path: /parents/1/resources/list
     # path: /parents/1/resources/3/delete    => redirect_path: /parents/1/resources/list
     # path: /parents/1/resources/3/move_next => redirect_path: /parents/1/resources/list
+    # path: /parents/1/resources/3/move_to/2 => redirect_path: /parents/1/resources/list
     if ( $mode eq 'list' ) {
         pop(@captures)
             unless $action eq 'create';
@@ -191,6 +192,7 @@ sub _redirect {
     # path: /parents/1/resources/create      => redirect_path: /parents/1/resources/<id>/show
     # path: /parents/1/resources/3/edit      => redirect_path: /parents/1/resources/3/show
     # path: /parents/1/resources/3/move_next => redirect_path: /parents/1/resources/3/show
+    # path: /parents/1/resources/3/move_to/2 => redirect_path: /parents/1/resources/3/show
     # path: /parents/1/resources/3/delete    => redirect_path: /parents/1/resources/list
     elsif ( $mode eq 'show' ) {
         if ( $action eq 'create' ) {
@@ -201,6 +203,7 @@ sub _redirect {
         elsif ( $action eq 'edit'
                 || $action eq 'move_next'
                 || $action eq 'move_previous'
+                || $action eq 'move_to'
             ) {
             $path = $c->uri_for_action($self->action_for('show'), \@captures);
         }
@@ -221,6 +224,8 @@ sub _redirect {
     # path: /resources/3/delete              => redirect_path: /resources/list
     # path: /parents/1/resources/3/move_next => redirect_path: /parents/1/show
     # path: /resources/3/move_next           => redirect_path: /resources/list
+    # path: /parents/1/resources/3/move_to/2 => redirect_path: /parents/1/show
+    # path: /resources/3/move_to/2           => redirect_path: /resources/list
     elsif ( $mode eq 'show_parent' ) {
         if ( $self->has_parent ) {
             my @chain = @{ $c->dispatcher->expand_action( $c->action )->{chain} };
@@ -230,9 +235,11 @@ sub _redirect {
             if ($action eq 'create') {
                 $parent_base_with_id_action = $chain[-3];
             } elsif ($action eq 'edit'
-                || $action eq 'delete'
-                || $action eq 'move_next'
-                || $action eq 'move_previous') {
+                    || $action eq 'delete'
+                    || $action eq 'move_next'
+                    || $action eq 'move_previous'
+                    || $action eq 'move_to'
+                ) {
                 $parent_base_with_id_action = $chain[-4];
                 pop @captures;
             }
@@ -290,6 +297,11 @@ sub _msg {
         return $c->can('loc')
             ? $c->loc( 'resources.moved_previous', $self->_identifier($c) )
             : $self->_identifier($c) . " moved previous.";
+    }
+    elsif ( $action eq 'move_to' ) {
+        return $c->can('loc')
+            ? $c->loc( 'resources.moved_to', $self->_identifier($c) )
+            : $self->_identifier($c) . " moved.";
     }
 }
 

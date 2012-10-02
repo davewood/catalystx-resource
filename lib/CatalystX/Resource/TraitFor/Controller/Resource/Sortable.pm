@@ -93,4 +93,18 @@ sub move_previous : Method('POST') Chained('base_with_id') PathPart('move_previo
     $self->_redirect($c);
 }
 
+=head2 move_to
+
+    move resource to denoted position
+
+=cut
+
+sub move_to : Method('POST') Chained('base_with_id') PathPart('move_to') Args(1) {
+    my ( $self, $c, $pos ) = @_;
+    my $resource = $c->stash->{ $self->resource_key };
+    $resource->move_to( $pos );
+    $c->flash( msg => $self->_msg( $c, 'move_to' ) );
+    $self->_redirect($c);
+}
+
 1;
