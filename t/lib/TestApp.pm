@@ -132,7 +132,7 @@ __PACKAGE__->config(
         parent_key => 'album',
         parents_accessor => 'lyrics',
         redirect_mode => 'show',
-        traits => ['Sortable', '-List'],
+        traits => ['Sortable'],
         actions => {
             base => {
                 PathPart => 'lyrics',

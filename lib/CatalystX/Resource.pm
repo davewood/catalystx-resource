@@ -2,6 +2,7 @@ package CatalystX::Resource;
 use Moose::Role;
 use CatalystX::InjectComponent;
 use namespace::autoclean;
+use 5.010;
 
 # ABSTRACT: Provide CRUD functionality to your Controllers
 

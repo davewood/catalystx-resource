@@ -63,6 +63,9 @@ Example: Artist has_many Albums has_many Songs
     # TestApp/Schema/Result/Resource/Song.pm
     __PACKAGE__->grouping_column('album_id');
 
+After a move operation you will always be redirected to the referer
+If no referer header is foudn you'll be redirected to '/'
+
 =head1 ACTIONS
 
 =head2 move_next
@@ -76,7 +79,7 @@ sub move_next : Method('POST') Chained('base_with_id') PathPart('move_next') Arg
     my $resource = $c->stash->{ $self->resource_key };
     $resource->move_next;
     $c->flash( msg => $self->_msg( $c, 'move_next' ) );
-    $self->_redirect($c);
+    $c->res->redirect($c->req->referer // '/');
 }
 
 =head2 move_previous
@@ -90,7 +93,7 @@ sub move_previous : Method('POST') Chained('base_with_id') PathPart('move_previo
     my $resource = $c->stash->{ $self->resource_key };
     $resource->move_previous;
     $c->flash( msg => $self->_msg( $c, 'move_previous' ) );
-    $self->_redirect($c);
+    $c->res->redirect($c->req->referer // '/');
 }
 
 =head2 move_to
@@ -104,7 +107,7 @@ sub move_to : Method('POST') Chained('base_with_id') PathPart('move_to') Args(1)
     my $resource = $c->stash->{ $self->resource_key };
     $resource->move_to( $pos );
     $c->flash( msg => $self->_msg( $c, 'move_to' ) );
-    $self->_redirect($c);
+    $c->res->redirect($c->req->referer // '/');
 }
 
 1;

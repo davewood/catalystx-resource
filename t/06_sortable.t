@@ -67,8 +67,8 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     my $path ='/artists/1/move_next';
     my $res = request($path);
     ok($res->is_error, "GET $path returns HTTP 404");
-    $res = request(POST $path);
-    ok($res->is_redirect, "$path returns HTTP 302");
+    $res = request(POST $path, Referer => '/artists/list');
+    ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path, '/artists/list');
     my $cookie = $res->header('Set-Cookie');
@@ -82,8 +82,8 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     my $path ='/artists/1/move_previous';
     my $res = request($path);
     ok($res->is_error, "GET $path returns HTTP 404");
-    $res = request(POST $path);
-    ok($res->is_redirect, "$path returns HTTP 302");
+    $res = request(POST $path, Referer => '/artists/list');
+    ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path, '/artists/list');
     my $cookie = $res->header('Set-Cookie');
@@ -97,8 +97,8 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     my $path ='/artists/1/move_to/2';
     my $res = request($path);
     ok($res->is_error, "GET $path returns HTTP 404");
-    $res = request(POST $path);
-    ok($res->is_redirect, "$path returns HTTP 302");
+    $res = request(POST $path, Referer => '/artists/list');
+    ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path, '/artists/list');
     my $cookie = $res->header('Set-Cookie');
@@ -113,8 +113,8 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     my $path ='/artists/1/albums/1/songs/1/move_next';
     my $res = request($path);
     ok($res->is_error, "GET $path returns HTTP 404");
-    $res = request(POST $path);
-    ok($res->is_redirect, "$path returns HTTP 302");
+    $res = request(POST $path, Referer => '/artists/1/albums/1/songs/list');
+    ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path, '/artists/1/albums/1/songs/list');
     my $cookie = $res->header('Set-Cookie');
@@ -128,8 +128,8 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     my $path ='/artists/1/albums/1/songs/1/move_previous';
     my $res = request($path);
     ok($res->is_error, "GET $path returns HTTP 404");
-    $res = request(POST $path);
-    ok($res->is_redirect, "$path returns HTTP 302");
+    $res = request(POST $path, Referer => '/artists/1/albums/1/songs/list');
+    ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path, '/artists/1/albums/1/songs/list');
     my $cookie = $res->header('Set-Cookie');
@@ -138,14 +138,14 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     like($content, '/smack my bitch up<\/a>.*hit me baby one more time/s', 'resource has been moved to previous position');
 }
 
-# Nested resource, List trait of child resource is disabled
+# Nested resource
 # redirect_mode = 'show_parent'
 {
     my $path ='/artists/1/albums/1/artworks/1/move_next';
     my $res = request($path);
     ok($res->is_error, "GET $path returns HTTP 404");
-    $res = request(POST $path);
-    ok($res->is_redirect, "$path returns HTTP 302");
+    $res = request(POST $path, , Referer => '/artists/1/albums/1/show');
+    ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path, '/artists/1/albums/1/show');
     my $cookie = $res->header('Set-Cookie');
@@ -160,8 +160,8 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     my $path ='/artists/1/albums/1/lyrics/1/move_next';
     my $res = request($path);
     ok($res->is_error, "GET $path returns HTTP 404");
-    $res = request(POST $path);
-    ok($res->is_redirect, "$path returns HTTP 302");
+    $res = request(POST $path, Referer => '/artists/1/albums/1/lyrics/1/show');
+    ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
     is($uri->path, '/artists/1/albums/1/lyrics/1/show');
     my $cookie = $res->header('Set-Cookie');
