@@ -70,7 +70,7 @@ Make sure you implement this action in your App. (default: '/default')
 =head1 CAVEAT
 
 
-=head2 Moose Method Modifiers
+=head2 Using Moose Method Modifiers on your Resource Controller
 
 If you want to apply Method Modifiers to a resource controller you have to
 subclass from CatalystX::Resource::Controller::Resource and apply the roles in
@@ -80,6 +80,21 @@ a BEGIN block.
     use Moose;
     use namespace::autoclean;
 
+    __PACKAGE__->config(
+        resultset_key => 'artists_rs',
+        resources_key => 'artists',
+        resource_key  => 'artist',
+        form_class    => 'TestApp::Form::Resource::Artist',
+        model         => 'DB::Resource::Artist',
+        traits        => [qw/ MergeUploadParams /],
+        error_path    => '/error',
+        actions       => {
+            base => {
+                PathPart => 'artists',
+            },
+        },
+    );
+
     BEGIN {
         extends 'CatalystX::Resource::Controller::Resource';
         with 'CatalystX::Resource::TraitFor::Controller::Resource::List';
@@ -88,11 +103,22 @@ a BEGIN block.
         with 'CatalystX::Resource::TraitFor::Controller::Resource::Form';
         with 'CatalystX::Resource::TraitFor::Controller::Resource::Create';
         with 'CatalystX::Resource::TraitFor::Controller::Resource::Edit';
+        with 'CatalystX::Resource::TraitFor::Controller::Resource::Sortable';
     }
 
     before 'list' => sub { ... }
 
     1;
+
+Because of a bug in L<MooseX::MethodAttributes>
+L<CatalystX::Resource::TraitFor::Controller::Resource::MergeUploadParams> is not
+applied correctly if you include it via C<with> in the C<BEGIN> block of the
+subclassed controller.
+
+Including it via C<traits =E<gt> ['MergeUploadParams']> works around this.
+
+MergeUploadParams different from the other roles. The other roles add a subroutine
+whereas MergeUploadParams uses a Moose Method Modifier.
 
 =head1 SEE ALSO
 
