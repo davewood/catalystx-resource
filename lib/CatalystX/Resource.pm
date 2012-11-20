@@ -42,6 +42,20 @@ actions for free.
 Resources can be nested.
 (e.g.: Artist has_many Albums)
 
+=head2 traits
+
+default traits:
+    List
+    Show
+    Delete
+    Form
+    Create
+    Edit
+
+optional traits:
+    Sortable
+    MergeUploadParams
+
 You can remove actions if you don't need them.
 
 Example, you don't need the edit action:
@@ -50,7 +64,7 @@ Example, you don't need the edit action:
         traits => ['-Edit'],
     },
 
-Using the Sortable trait your resources are sortable:
+Use the Sortable trait to make your resources sortable:
     'Controller::Resource::Artist' => {
         ...,
         traits => ['Sortable'],
@@ -76,6 +90,9 @@ If you want to apply Method Modifiers to a resource controller you have to
 subclass from CatalystX::Resource::Controller::Resource and apply the roles in
 a BEGIN block.
 
+The following example loads the B<List> trait via B<with> in order to apply a
+B<before> method modifier.
+
     package MyApp::Controller::Foo;
     use Moose;
     use namespace::autoclean;
@@ -86,7 +103,7 @@ a BEGIN block.
         resource_key  => 'artist',
         form_class    => 'TestApp::Form::Resource::Artist',
         model         => 'DB::Resource::Artist',
-        traits        => [qw/ MergeUploadParams /],
+        traits        => [qw/ MergeUploadParams -Delete /],
         error_path    => '/error',
         actions       => {
             base => {
@@ -99,7 +116,6 @@ a BEGIN block.
         extends 'CatalystX::Resource::Controller::Resource';
         with 'CatalystX::Resource::TraitFor::Controller::Resource::List';
         with 'CatalystX::Resource::TraitFor::Controller::Resource::Show';
-        with 'CatalystX::Resource::TraitFor::Controller::Resource::Delete';
         with 'CatalystX::Resource::TraitFor::Controller::Resource::Form';
         with 'CatalystX::Resource::TraitFor::Controller::Resource::Create';
         with 'CatalystX::Resource::TraitFor::Controller::Resource::Edit';
