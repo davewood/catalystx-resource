@@ -25,7 +25,9 @@ my $testapp = new_ok ( 'TestApp' );
     does_ok($controller, 'CatalystX::Resource::TraitFor::Controller::Resource::Show');
     does_ok($controller, 'CatalystX::Resource::TraitFor::Controller::Resource::Create');
     does_ok($controller, 'CatalystX::Resource::TraitFor::Controller::Resource::Edit');
+    does_ok($controller, 'CatalystX::Resource::TraitFor::Controller::Resource::Sortable');
     does_ok($controller, 'CatalystX::Resource::TraitFor::Controller::Resource::Delete');
+    does_ok($controller, 'CatalystX::Resource::TraitFor::Controller::Resource::MergeUploadParams');
 
     for my $action_name (qw/base list show delete create edit/) {
         my $action = $controller->action_for($action_name);
