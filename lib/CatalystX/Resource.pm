@@ -64,12 +64,35 @@ array ref of controller names which will be injected into your app
 
 =head2 error_path
 
-where to detach to in case of an error (default: '/default')
+CatalystX::Resource detaches to $self->error_path if a resource cannot be found.
+Make sure you implement this action in your App. (default: '/default')
 
 =head1 CAVEAT
 
-CatalystX::Resource detaches to $self->error_path if a resource cannot be found.
-Make sure you implement this action in your App. (default: '/default')
+
+=head2 Moose Method Modifiers
+
+If you want to apply Method Modifiers to a resource controller you have to
+subclass from CatalystX::Resource::Controller::Resource and apply the roles in
+a BEGIN block.
+
+    package MyApp::Controller::Foo;
+    use Moose;
+    use namespace::autoclean;
+
+    BEGIN {
+        extends 'CatalystX::Resource::Controller::Resource';
+        with 'CatalystX::Resource::TraitFor::Controller::Resource::List';
+        with 'CatalystX::Resource::TraitFor::Controller::Resource::Show';
+        with 'CatalystX::Resource::TraitFor::Controller::Resource::Delete';
+        with 'CatalystX::Resource::TraitFor::Controller::Resource::Form';
+        with 'CatalystX::Resource::TraitFor::Controller::Resource::Create';
+        with 'CatalystX::Resource::TraitFor::Controller::Resource::Edit';
+    }
+
+    before 'list' => sub { ... }
+
+    1;
 
 =head1 SEE ALSO
 
