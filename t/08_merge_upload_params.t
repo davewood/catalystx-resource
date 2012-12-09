@@ -38,7 +38,7 @@ lives_ok(sub { $schema->deploy }, 'deploy schema');
                         name => 'simit',
                         password => 'asdf',
                         password_repeat => 'asdf',
-                        picture => [ "$Bin/07_merge_upload_params.t" ], # a file upload
+                        picture => [ "$Bin/lib/TestApp.pm" ], # a file upload
                        ]
     );
     ok($res->is_redirect, "POST $path returns HTTP 302");
