@@ -46,7 +46,7 @@ lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' });
     like($res->decoded_content, '/TestApp/', "$path content contains string 'TestApp'");
 }
 
-# identifier_columns
+# identifier_candidates
 {
     my $path = '/artists/' . $artist->id . '/concerts/'. $concert->id .  '/edit';
     #my $res = request(POST $path);

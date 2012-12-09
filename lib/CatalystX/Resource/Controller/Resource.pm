@@ -42,22 +42,23 @@ has 'model' => (
     required => 1,
 );
 
-=head2 identifier_columns
+=head2 identifier_candidates
 
 ArrayRef of column names used as name in messages.
 
 if you edit, delete, ... a resource a msg is stored in the stash.
-the first defined value of the provided columns will be used.
+the first candidate available as accessor on the resoure (tested with
+$row->can(...)) that returns a defined value will be used.
 
-example: "Resource 'Michael Jackson' has been deleted."
+example: "'Michael Jackson' has been deleted.", "'Artist (id: 3)' has been updated."
 
 default: [ 'name', 'title' ]
 
-if no identifier is found the resource_key is used
+if no identifier is found resource_key is used
 
 =cut
 
-has 'identifier_columns' => (
+has 'identifier_candidates' => (
     is      => 'ro',
     isa     => 'ArrayRef',
     default => sub {[ qw/ name title / ]},
@@ -300,17 +301,20 @@ sub _identifier {
     my ( $self, $c ) = @_;
     my $resource = $c->stash->{ $self->resource_key };
 
-    for my $col (@{ $self->identifier_columns }) {
+    for my $identifier (@{ $self->identifier_candidates }) {
         if (
-            $resource->result_source->has_column( $col )
-            && defined $resource->$col
-            && $resource->$col
+            $resource->can( $identifier )
+            && defined $resource->$identifier
         ) {
-            return $resource->$col
+            return $resource->$identifier
         }
     }
 
-    return ucfirst( $self->resource_key );
+    my $identifier =
+        $resource->can('id')
+        ? $self->resource_key . ' (id: ' . $resource->id . ')'
+        : $self->resource_key;
+    return ucfirst( $identifier );
 }
 
 =head1 ACTIONS

@@ -1,3 +1,9 @@
+0.003_002 2012-12-09
+    * change config 'identifier_columns' to 'identifier_candidates'
+      now you can use accessor on your $row in addition to columns
+      (also, if fallback $row->resource_key is used as identifier, add value
+of id column if available)
+
 0.003_001 2012-10-24
     * redirect to referer after move operations
       (redirect to '/' if referer header is missing)
