@@ -35,13 +35,13 @@ my $artist = $schema->resultset('Resource::Artist')->create({
 });
 lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' }); }, 'create album');
 
-# change redirect_mode to 'show_parent'
+# change redirect_mode to 'show_parent_list'
 # 'list' is default but we overwrote it in TestApp.pm
 {
     my ($res, $c) = ctx_request(GET '/');
     for my $resource (qw/ Artist Concert Album Song /) {
         my $controller = $c->controller("Resource::$resource");
-        $controller->redirect_mode('show_parent');
+        $controller->redirect_mode('show_parent_list');
     }
 }
 
@@ -102,7 +102,7 @@ lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' });
     $res = request(POST $path, [ name => 'I Brake Together' ]);
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path, '/artists/2/show');
+    is($uri->path, '/artists/list');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/I Brake Together created/', 'check create success notification');
@@ -117,7 +117,7 @@ lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' });
     $res = request(POST $path, [ name => 'Es gibt Reis, Baby' ]);
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path, '/artists/2/show');
+    is($uri->path, '/artists/list');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/Es gibt Reis, Baby updated/', 'check edit success notification');
@@ -129,7 +129,7 @@ lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' });
     my $res = request(POST $path);
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path, '/artists/2/show');
+    is($uri->path, '/artists/list');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/Es gibt Reis, Baby deleted/', 'check delete success notification');

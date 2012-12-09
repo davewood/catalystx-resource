@@ -83,7 +83,6 @@ Make sure you implement this action in your App. (default: '/default')
 
 =head1 CAVEAT
 
-
 =head2 Using Moose Method Modifiers on your Resource Controller
 
 If you want to apply Method Modifiers to a resource controller you have to
