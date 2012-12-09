@@ -56,7 +56,7 @@ lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' });
     is($uri->path, '/artists/' . $artist->id . '/concerts/list');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
-    like($content, '/Madison Square Garden updated/', 'check delete success notification');
+    like($content, '/Madison Square Garden updated/', 'check update success notification');
 }
 
 # SHOW
