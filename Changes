@@ -1,3 +1,6 @@
+0.004001 2012-12-11
+    * stable release of earlier dev releases
+
 0.003_003 2012-12-09
     * new redirect_mode 'show_parent_list' redirects to list of parent
 
