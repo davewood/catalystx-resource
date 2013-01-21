@@ -29,7 +29,7 @@ has 'form_class' => (
 );
 
 =head2 form_template
-
+:
 template file for HTML::FormHandler
 optional, if you don't supply a form_template a stringified version will be used
 
@@ -70,6 +70,7 @@ sub form {
         active => $activate_form_fields,
         item   => $resource,
         params => $c->req->params,
+        posted => ($c->req->method eq 'POST'),
     );
 
     if ( $self->has_form_template ) {
