@@ -65,7 +65,7 @@ sub form {
     my $form_attrs =
       exists $c->stash->{form_attrs} ? $c->stash->{form_attrs} : {};
 
-    my $form = $self->form_class->new(%$form_attrs);
+    my $form = $self->form_class->new(ctx => $c, %$form_attrs);
     $form->process(
         active => $activate_form_fields,
         item   => $resource,
