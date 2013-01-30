@@ -14,8 +14,8 @@ requires qw/
 
 =head2 activate_fields_edit
 
-hashref of form fields to activate in the edit form
-default = []
+arrayref of form fields to activate in the edit form
+(default = []).
 Can be overriden with $c->stash->{activate_form_fields}
 
 =cut

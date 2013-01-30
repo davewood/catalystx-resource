@@ -132,7 +132,7 @@ subclassed controller.
 
 Including it via C<traits =E<gt> ['MergeUploadParams']> works around this.
 
-MergeUploadParams different from the other roles. The other roles add a subroutine
+MergeUploadParams is different from the other roles. The other roles add a subroutine
 whereas MergeUploadParams uses a Moose Method Modifier.
 
 =head1 SEE ALSO

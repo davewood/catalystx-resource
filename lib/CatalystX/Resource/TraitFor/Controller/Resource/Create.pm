@@ -15,9 +15,9 @@ requires qw/
 
 =head2 activate_fields_create
 
-hashref of form fields to activate in the create form
-e.g. ['password', 'password_confirm']
-default = []
+(default = []).
+arrayref of form fields to activate in the create form
+(e.g. ['password', 'password_confirm'], default = [])
 Can be overriden with $c->stash->{activate_form_fields}
 
 Example: You only want admins to be able to change a field.
