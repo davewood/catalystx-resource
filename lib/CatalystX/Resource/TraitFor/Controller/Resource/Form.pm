@@ -70,6 +70,7 @@ sub form {
         active => $activate_form_fields,
         item   => $resource,
         params => $c->req->params,
+        posted => ($c->req->method eq 'POST'),
     );
 
     if ( $self->has_form_template ) {
