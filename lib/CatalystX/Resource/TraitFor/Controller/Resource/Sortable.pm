@@ -79,7 +79,7 @@ sub move_next : Method('POST') Chained('base_with_id') PathPart('move_next') Arg
     my $resource = $c->stash->{ $self->resource_key };
     $resource->move_next;
     $c->flash( msg => $self->_msg( $c, 'move_next' ) );
-    $c->res->redirect($c->req->referer // '/');
+    $c->res->redirect($c->req->referer || '/');
 }
 
 =head2 move_previous
@@ -93,7 +93,7 @@ sub move_previous : Method('POST') Chained('base_with_id') PathPart('move_previo
     my $resource = $c->stash->{ $self->resource_key };
     $resource->move_previous;
     $c->flash( msg => $self->_msg( $c, 'move_previous' ) );
-    $c->res->redirect($c->req->referer // '/');
+    $c->res->redirect($c->req->referer || '/');
 }
 
 =head2 move_to
@@ -107,7 +107,7 @@ sub move_to : Method('POST') Chained('base_with_id') PathPart('move_to') Args(1)
     my $resource = $c->stash->{ $self->resource_key };
     $resource->move_to( $pos );
     $c->flash( msg => $self->_msg( $c, 'move_to' ) );
-    $c->res->redirect($c->req->referer // '/');
+    $c->res->redirect($c->req->referer || '/');
 }
 
 1;
