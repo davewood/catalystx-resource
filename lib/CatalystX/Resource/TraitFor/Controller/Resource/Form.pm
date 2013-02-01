@@ -22,10 +22,10 @@ e.g.: 'MyApp::Form::Resources'
 =cut
 
 has 'form_class' => (
-    is       => 'ro',
+    is       => 'rw',
     required => 1,
-    isa => LoadableClass,
-    coerce => 1,
+    isa      => LoadableClass,
+    coerce   => 1,
 );
 
 =head2 form_template
