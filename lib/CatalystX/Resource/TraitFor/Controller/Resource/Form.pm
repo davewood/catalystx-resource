@@ -29,7 +29,7 @@ has 'form_class' => (
 );
 
 =head2 form_template
-
+:
 template file for HTML::FormHandler
 optional, if you don't supply a form_template a stringified version will be used
 
