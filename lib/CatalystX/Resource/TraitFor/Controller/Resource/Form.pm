@@ -60,17 +60,23 @@ sub form {
       ? $c->stash->{activate_form_fields}
       : [@$activate_fields];
 
-    # if you want to pass additional attributes to the form put a hashref in
-    # the stash key 'form_attrs'
     my $form_attrs =
       exists $c->stash->{form_attrs} ? $c->stash->{form_attrs} : {};
+    warn 'DEPRECATION WARNING: Change $c->stash->{form_attrs} to $c->stash->{form_attrs_new} see Changes file for details.'
+      if scalar keys %$form_attrs;
 
-    my $form = $self->form_class->new(%$form_attrs);
+    my $form_attrs_new =
+      exists $c->stash->{form_attrs_new} ? $c->stash->{form_attrs_new} : {};
+    my $form_attrs_process =
+      exists $c->stash->{form_attrs_process} ? $c->stash->{form_attrs_process} : {};
+
+    my $form = $self->form_class->new(%$form_attrs, %$form_attrs_new);
     $form->process(
         active => $activate_form_fields,
         item   => $resource,
         params => $c->req->params,
         posted => ($c->req->method eq 'POST'),
+       %$form_attrs_process,
     );
 
     if ( $self->has_form_template ) {
@@ -92,5 +98,23 @@ sub form {
 
     $self->_redirect($c);
 }
+
+=head1 Catalyst stash variables
+
+=head2 form_attrs_new
+
+you can pass attributes to $form->new via $c->stash->{form_attrs_new}
+
+  $c->stash->{form_attrs_new} = { #... };
+
+=cut
+
+=head2 form_attrs_process
+
+you can pass attributes to $form->process via $c->stash->{form_attrs_process}
+
+  $c->stash->{form_attrs_process} = { posted => 0 };
+
+=cut
 
 1;
