@@ -1,3 +1,6 @@
+0.005_002 2013-03-26
+    * update version of required module SQL::TRanslator
+
 0.005_001 2013-03-20
     * deprecated use of catalyst stash key 'form_attrs' which was passed to
       $form->new. Use stash keys 'form_attrs_new' and 'form_attrs_process'
