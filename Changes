@@ -1,5 +1,8 @@
+0.006001 2013-04-02
+    * stable release of earlier dev releases
+
 0.005_002 2013-03-26
-    * update version of required module SQL::TRanslator
+    * update version of required module SQL::Translator
 
 0.005_001 2013-03-20
     * deprecated use of catalyst stash key 'form_attrs' which was passed to
