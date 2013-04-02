@@ -1,3 +1,7 @@
+    * Removed DEPRECATION warning if stash key 'form_attrs' is used.
+      'form_attrs' is not merged into attributes used for $form->new() anymore.
+      Use 'form_attrs_new' instead.
+
 0.006001 2013-04-02
     * stable release of earlier dev releases
 
