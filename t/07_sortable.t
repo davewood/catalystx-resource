@@ -92,9 +92,22 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     like($content, '/davewood<\/a>.*flipper/s', 'resource has been moved to previous position');
 }
 
+# failing move_to because new position is not submitted
+{
+    my ($path, $res, $content);
+    $path ='/artists/1/move_to';
+    $res = request(POST $path, Referer => '/artists/list');
+    $content = $res->content;
+    like($content, '/Could not move davewood. No position defined/', 'check move_to error message');
+    $path ='/artists/list';
+    $res = request($path);
+    $content = $res->content;
+    like($content, '/davewood<\/a>.*flipper/s', 'resource did not move.');
+}
+
 # move_to
 {
-    my $path ='/artists/1/move_to/2';
+    my $path ='/artists/1/move_to?pos=2';
     my $res = request($path);
     ok($res->is_error, "GET $path returns HTTP 404");
     $res = request(POST $path, Referer => '/artists/list');

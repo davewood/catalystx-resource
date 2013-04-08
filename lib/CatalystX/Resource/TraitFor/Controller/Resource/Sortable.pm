@@ -102,8 +102,15 @@ sub move_previous : Method('POST') Chained('base_with_id') PathPart('move_previo
 
 =cut
 
-sub move_to : Method('POST') Chained('base_with_id') PathPart('move_to') Args(1) {
-    my ( $self, $c, $pos ) = @_;
+sub move_to : Method('POST') Chained('base_with_id') PathPart('move_to') Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $pos = $c->req->param('pos');
+    if (!defined $pos) {
+        $c->stash( error_msg => $self->_msg( $c, 'move_to_undef' ) );
+        $c->detach( $self->error_path );
+    }
+
     my $resource = $c->stash->{ $self->resource_key };
     $resource->move_to( $pos );
     $c->flash( msg => $self->_msg( $c, 'move_to' ) );

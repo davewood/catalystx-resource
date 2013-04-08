@@ -322,6 +322,11 @@ sub _msg {
             ? $c->loc( 'resources.moved_to', $self->_identifier($c) )
             : $self->_identifier($c) . " moved.";
     }
+    elsif ( $action eq 'move_to_undef' ) {
+        return $c->can('loc')
+            ? $c->loc( 'resources.move_to_undef', $self->_identifier($c) )
+            : 'Could not move ' . $self->_identifier($c) . '. No position defined.';
+    }
 }
 
 =head2 _identifier
