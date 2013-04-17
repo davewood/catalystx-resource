@@ -15,6 +15,7 @@ __PACKAGE__->config(
     activate_fields_create => [qw/ password password_repeat /],
     actions                => { base => { PathPart => 'artists', }, },
     error_path             => '/error404',
+    prefetch               => 'albums',
 );
 
 
