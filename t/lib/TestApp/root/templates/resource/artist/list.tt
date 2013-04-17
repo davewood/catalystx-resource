@@ -15,5 +15,15 @@
         <input type="hidden" id="pos" name="pos" value="2">
         <input type="submit" value="move to pos 2">
     </form>
+    Albums:<br/>
+    [% FOREACH album = artist.albums %]
+        [% album.name %]<br/>
+    [% END %]
+    <br/>
+    Concerts:<br/>
+    [% FOREACH concert = artist.concerts %]
+        [% concert.location %]<br/>
+    [% END %]
+    <br/>
     <br/>
 [% END %]

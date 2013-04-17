@@ -1,1 +1,1 @@
-[% concert.id %]:[% concert.name %]
+[% concert.id %]:[% concert.location %]
