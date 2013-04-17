@@ -92,7 +92,7 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     like($content, '/davewood<\/a>.*flipper/s', 'resource has been moved to previous position');
 }
 
-# failing move_to because new position is not submitted
+# failing move_to because request parameter with new position is missing
 {
     my ($path, $res, $content);
     $path ='/artists/1/move_to';
