@@ -18,7 +18,7 @@ lives_ok(
     sub { $schema = TestApp::Schema->connect("DBI:SQLite:$db_file") },
     'Connect'
 );
-ok $schema;
+ok(defined $schema, 'got a schema');
 lives_ok(sub { $schema->deploy }, 'deploy schema');
 
 # populate DB
@@ -53,7 +53,7 @@ lives_ok(sub { $artist->albums->create({ id => 1, name => 'Mach et einfach!' });
     my $res = request(POST $path, [ location => 'Madison Square Garden' ]);
     ok($res->is_redirect, "$path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path, '/artists/' . $artist->id . '/concerts/list');
+    is($uri->path, '/artists/' . $artist->id . '/concerts/list', 'redirect location is correct');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/Madison Square Garden updated/', 'check update success notification');

@@ -19,7 +19,7 @@ lives_ok(
     sub { $schema = TestApp::Schema->connect("DBI:SQLite:$db_file") },
     'Connect'
 );
-ok($schema);
+ok(defined $schema, 'got a schema');
 lives_ok(sub { $schema->deploy }, 'deploy schema');
 
 # populate DB
@@ -70,7 +70,7 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     $res = request(POST $path, Referer => '/artists/list');
     ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path, '/artists/list');
+    is($uri->path, '/artists/list', 'redirect location is correct');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/davewood moved next/', 'check move_next success notification');
@@ -85,7 +85,7 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     $res = request(POST $path, Referer => '/artists/list');
     ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path, '/artists/list');
+    is($uri->path, '/artists/list', 'redirect location is correct');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/davewood moved previous/', 'check move_previous success notification');
@@ -113,7 +113,7 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     $res = request(POST $path, Referer => '/artists/list');
     ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path, '/artists/list');
+    is($uri->path, '/artists/list', 'redirect location is correct');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/davewood moved./', 'check move_to success notification');
@@ -129,7 +129,7 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     $res = request(POST $path, Referer => '/artists/1/albums/1/songs/list');
     ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path, '/artists/1/albums/1/songs/list');
+    is($uri->path, '/artists/1/albums/1/songs/list', 'redirect location is correct');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/smack my bitch up moved next/', 'check move_next success notification');
@@ -144,7 +144,7 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     $res = request(POST $path, Referer => '/artists/1/albums/1/songs/list');
     ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path, '/artists/1/albums/1/songs/list');
+    is($uri->path, '/artists/1/albums/1/songs/list', 'redirect location is correct');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/smack my bitch up moved previous/', 'check move_previous success notification');
@@ -160,7 +160,7 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     $res = request(POST $path, , Referer => '/artists/1/albums/1/show');
     ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path, '/artists/1/albums/1/show');
+    is($uri->path, '/artists/1/albums/1/show', 'redirect location is correct');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/album coverfrontside moved next/', 'check move_next success notification');
@@ -176,7 +176,7 @@ lives_ok(sub { $album->lyrics->create({ id => 3, name => "lyric3" }); }, 'create
     $res = request(POST $path, Referer => '/artists/1/albums/1/lyrics/1/show');
     ok($res->is_redirect, "POST $path returns HTTP 302");
     my $uri = URI->new($res->header('location'));
-    is($uri->path, '/artists/1/albums/1/lyrics/1/show');
+    is($uri->path, '/artists/1/albums/1/lyrics/1/show', 'redirect location is correct');
     my $cookie = $res->header('Set-Cookie');
     my $content = request(GET $uri->path, Cookie => $cookie)->decoded_content;
     like($content, '/lyric1 moved next/', 'check move_next success notification');

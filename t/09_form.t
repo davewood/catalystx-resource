@@ -18,7 +18,7 @@ lives_ok(
     sub { $schema = TestApp::Schema->connect("DBI:SQLite:$db_file") },
     'Connect'
 );
-ok $schema;
+ok(defined $schema, 'got a schema');
 lives_ok(sub { $schema->deploy }, 'deploy schema');
 
 # CREATE
