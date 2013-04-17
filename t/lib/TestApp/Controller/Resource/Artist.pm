@@ -2,6 +2,8 @@ package TestApp::Controller::Resource::Artist;
 use Moose;
 use namespace::autoclean;
 
+BEGIN { extends 'CatalystX::Resource::Controller::Resource'; }
+
 __PACKAGE__->config(
     resultset_key          => 'artists_rs',
     resources_key          => 'artists',
@@ -9,22 +11,12 @@ __PACKAGE__->config(
     form_class             => 'TestApp::Form::Resource::Artist',
     model                  => 'DB::Resource::Artist',
     redirect_mode          => 'list',
-    traits                 => ['MergeUploadParams'],
+    traits                 => [qw/ Create Show Edit Delete List Form Sortable MergeUploadParams /],
     activate_fields_create => [qw/ password password_repeat /],
     actions                => { base => { PathPart => 'artists', }, },
+    error_path             => '/error404',
 );
 
-BEGIN {
-    extends 'CatalystX::Resource::Controller::Resource';
-    with 'CatalystX::Resource::TraitFor::Controller::Resource::List';
-    with 'CatalystX::Resource::TraitFor::Controller::Resource::Show';
-    with 'CatalystX::Resource::TraitFor::Controller::Resource::Delete';
-    with 'CatalystX::Resource::TraitFor::Controller::Resource::Form';
-    with 'CatalystX::Resource::TraitFor::Controller::Resource::Create';
-    with 'CatalystX::Resource::TraitFor::Controller::Resource::Edit';
-    with 'CatalystX::Resource::TraitFor::Controller::Resource::Sortable';
-    with 'CatalystX::Resource::TraitFor::Controller::Resource::MergeUploadParams';
-}
 
 sub auto : Private {
     my ( $self, $c ) = @_;
