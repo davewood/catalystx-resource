@@ -1,3 +1,5 @@
+    * add prefetch feature
+
 0.007_001 2013-04-08
     * change in trait Sortable::move_to()
       instead of passing the new position as Args(1) it has to be passed as
