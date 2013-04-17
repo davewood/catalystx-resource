@@ -20,6 +20,8 @@ my $testapp = new_ok ( 'TestApp' );
         'Injected controller has correct class name'
     );
 
+    ok ( $controller->has_prefetch, 'Artist controller has a prefetch attribute set.' );
+
     does_ok($controller, 'CatalystX::Resource::TraitFor::Controller::Resource::Form');
     does_ok($controller, 'CatalystX::Resource::TraitFor::Controller::Resource::List');
     does_ok($controller, 'CatalystX::Resource::TraitFor::Controller::Resource::Show');
@@ -45,6 +47,8 @@ my $testapp = new_ok ( 'TestApp' );
         'TestApp::Controller::Resource::Concert',
         'Injected controller has correct class name'
     );
+
+    ok ( !$controller->has_prefetch, 'Concert controller does not have a prefetch attribute set.' );
 
     does_ok($controller, 'CatalystX::Resource::TraitFor::Controller::Resource::Form');
     does_ok($controller, 'CatalystX::Resource::TraitFor::Controller::Resource::List');
