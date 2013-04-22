@@ -36,8 +36,7 @@ __PACKAGE__->config(
         render_die => 1,
     },
     'Controller::Resource::Concert' => {
-        resultset_key => 'concerts_rs',
-        resources_key => 'concerts',
+        resultset_key => 'concerts',
         resource_key => 'concert',
         parent_key => 'artist',
         parents_accessor => 'concerts',
@@ -53,8 +52,7 @@ __PACKAGE__->config(
         },
     },
     'Controller::Resource::Album' => {
-        resultset_key => 'albums_rs',
-        resources_key => 'albums',
+        resultset_key => 'albums',
         resource_key => 'album',
         parent_key => 'artist',
         parents_accessor => 'albums',
@@ -68,8 +66,7 @@ __PACKAGE__->config(
         },
     },
     'Controller::Resource::Song' => {
-        resultset_key => 'songs_rs',
-        resources_key => 'songs',
+        resultset_key => 'songs',
         resource_key => 'song',
         form_class => 'TestApp::Form::Resource::Song',
         model => 'DB::Resource::Song',
@@ -84,8 +81,7 @@ __PACKAGE__->config(
         },
     },
     'Controller::Resource::Artwork' => {
-        resultset_key => 'artworks_rs',
-        resources_key => 'artworks',
+        resultset_key => 'artworks',
         resource_key => 'artwork',
         form_class => 'TestApp::Form::Resource::Artwork',
         model => 'DB::Resource::Artwork',
@@ -101,8 +97,7 @@ __PACKAGE__->config(
         },
     },
     'Controller::Resource::Lyric' => {
-        resultset_key => 'lyrics_rs',
-        resources_key => 'lyrics',
+        resultset_key => 'lyrics',
         resource_key => 'lyric',
         form_class => 'TestApp::Form::Resource::Lyric',
         model => 'DB::Resource::Lyric',

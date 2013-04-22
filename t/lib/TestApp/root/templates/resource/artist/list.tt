@@ -1,4 +1,4 @@
-[% FOREACH artist = artists %]
+[% FOREACH artist = artists.all %]
     <a href="[% c.uri_for(c.controller('Resource::Artist').action_for('show'), [ artist.id ]) %]">[% artist.name %]</a>
     Position: [% artist.position %]
     <form method="post" action="[% c.uri_for(c.controller('Resource::Artist').action_for('move_previous'), [ artist.id ] ) %]">

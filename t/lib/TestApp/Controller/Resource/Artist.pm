@@ -5,8 +5,7 @@ use namespace::autoclean;
 BEGIN { extends 'CatalystX::Resource::Controller::Resource'; }
 
 __PACKAGE__->config(
-    resultset_key          => 'artists_rs',
-    resources_key          => 'artists',
+    resultset_key          => 'artists',
     resource_key           => 'artist',
     form_class             => 'TestApp::Form::Resource::Artist',
     model                  => 'DB::Resource::Artist',

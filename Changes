@@ -1,3 +1,18 @@
+0.007_003 2013-04-22
+    * ATTENTION: this change breaks stuff!!!
+      CatalystX::Resource::TraitFor::Controller::List does no longer stash an
+      array reference under $self->resources_key because that is not actually
+      needed. If you want to access a list of all resources simply
+      use the resultset available in
+      $c->stash->{ $self->resultset_key } # Perl code
+      OR
+      [% $self->resultset_key %] #  Template Tookit
+
+      Update HowTo:
+        1) remove any occurence of 'resources_key'
+        2) update 'resultset_key'. (e.g.: 'artist_rs' to 'artists')
+        3) replace 'artists' with 'artists.all' in your templates
+
 0.007_002 2013-04-17
     * add prefetch feature
 

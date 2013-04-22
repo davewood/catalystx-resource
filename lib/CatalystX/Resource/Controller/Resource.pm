@@ -66,7 +66,7 @@ has 'identifier_candidates' => (
 
 =head2 resultset_key
 
-stash key used to store the resultset of this resource. (e.g.: 'cds_rs')
+stash key used to store the resultset of this resource. (e.g.: 'albums')
 
 =cut
 
@@ -76,22 +76,9 @@ has 'resultset_key' => (
     required => 1,
 );
 
-=head2 resources_key
-
-stash key used to store all results of this resource. (e.g.: 'tracks')
-You will need this to access a list of your resources in your template.
-
-=cut
-
-has 'resources_key' => (
-    is       => 'ro',
-    isa      => NonEmptySimpleStr,
-    required => 1,
-);
-
 =head2 resource_key
 
-stash key used to store specific result of this resource. (e.g.: 'track')
+stash key used to store specific result of this resource. (e.g.: 'album')
 You will need this to access your resource in your template.
 
 =cut
@@ -105,7 +92,7 @@ has 'resource_key' => (
 =head2 parent_key
 
 for a nested resource 'parent_key' is used as stash key to store the parent item
-(e.g.: 'cd')
+(e.g.: 'artist')
 this is required if parent_key is set
 
 =cut
@@ -120,7 +107,7 @@ has 'parent_key' => (
 
 the accessor on the parent resource to get a resultset
 of this resource (accessor in DBIC has_many)
-(e.g.: 'tracks')
+(e.g.: 'albums')
 this is required if parent_key is set
 
 =cut
@@ -133,7 +120,7 @@ has 'parents_accessor' => (
 =head2 prefetch
 
 The prefetch attribute value is passed through. See L<DBIx::Class::ResultSet> for details.
-(e.g.: 'albums', [qw/albums concerts/])
+(e.g.: 'tracks', [qw/tracks credits/])
 
 =cut
 

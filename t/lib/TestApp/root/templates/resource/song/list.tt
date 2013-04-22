@@ -1,4 +1,4 @@
-[% FOREACH song = songs %]
+[% FOREACH song = songs.all %]
     <a href="[% c.uri_for(c.controller('Resource::Song').action_for('show'), [ artist.id, album.id, song.id ]) %]">[% song.name %]</a>
     <form method="post" action="[% c.uri_for(c.controller('Resource::Song').action_for('move_previous'), [ artist.id, album.id, song.id ] ) %]">
         <input type="submit" value="move previous">
