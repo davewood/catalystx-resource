@@ -13,8 +13,7 @@ use namespace::autoclean;
 
     __PACKAGE__->config(
         'Controller::Resource::Artist' => {
-            resultset_key => 'artists_rs',
-            resources_key => 'artists',
+            resultset_key => 'artists',
             resource_key => 'artist',
             form_class => 'TestApp::Form::Resource::Artist',
             model => 'DB::Resource::Artist',
@@ -44,16 +43,42 @@ Resources can be nested.
 =head2 traits
 
 default traits:
-    List
-    Show
-    Delete
-    Form
-    Create
-    Edit
+
+=over
+
+=item List   ... GET /<resource>/list
+
+=item Show   ... GET /<resource>/*/show
+
+=item Delete ... POST /<resource>/*/delete
+
+=item Form
+
+=item Create ... GET|POST /<resource>/create
+
+=item Edit   ... GET|POST /<resource>/*/edit
+
+=back
 
 optional traits:
-    Sortable
-    MergeUploadParams
+
+=over
+
+=item MergeUploadParams
+
+=item Sortable
+
+=over
+
+=item POST /<resource>/*/move_next
+
+=item POST /<resource>/*/move_previous
+
+=item POST /<resource>/*/move_to
+
+=back
+
+=back
 
 You can remove actions if you don't need them.
 
@@ -96,8 +121,7 @@ B<before> method modifier.
     use namespace::autoclean;
 
     __PACKAGE__->config(
-        resultset_key => 'artists_rs',
-        resources_key => 'artists',
+        resultset_key => 'artists',
         resource_key  => 'artist',
         form_class    => 'TestApp::Form::Resource::Artist',
         model         => 'DB::Resource::Artist',

@@ -17,8 +17,7 @@ requires qw/
 
     # TestApp.pm
     'Controller::Resource::Artist' => {
-        resultset_key => 'artists_rs',
-        resources_key => 'artists',
+        resultset_key => 'artists',
         resource_key => 'artist',
         form_class => 'TestApp::Form::Resource::Artist',
         model => 'DB::Resource::Artist',
