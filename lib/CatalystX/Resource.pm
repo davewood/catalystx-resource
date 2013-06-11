@@ -43,42 +43,19 @@ Resources can be nested.
 =head2 traits
 
 default traits:
-
-=over
-
-=item List   ... GET /<resource>/list
-
-=item Show   ... GET /<resource>/*/show
-
-=item Delete ... POST /<resource>/*/delete
-
-=item Form
-
-=item Create ... GET|POST /<resource>/create
-
-=item Edit   ... GET|POST /<resource>/*/edit
-
-=back
+    List   ... GET /<resource>/list
+    Show   ... GET /<resource>/*/show
+    Delete ... POST /<resource>/*/delete
+    Form
+    Create ... GET|POST /<resource>/create
+    Edit   ... GET|POST /<resource>/*/edit
 
 optional traits:
-
-=over
-
-=item MergeUploadParams
-
-=item Sortable
-
-=over
-
-=item POST /<resource>/*/move_next
-
-=item POST /<resource>/*/move_previous
-
-=item POST /<resource>/*/move_to
-
-=back
-
-=back
+    MergeUploadParams
+    Sortable
+        POST /<resource>/*/move_next
+        POST /<resource>/*/move_previous
+        POST /<resource>/*/move_to
 
 You can remove actions if you don't need them.
 
