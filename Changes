@@ -1,3 +1,6 @@
+0.008001 2013-04-02
+    * stable release of earlier dev releases
+
 0.007_003 2013-04-22
     * ATTENTION: this change breaks stuff!!!
       CatalystX::Resource::TraitFor::Controller::List does no longer stash an
