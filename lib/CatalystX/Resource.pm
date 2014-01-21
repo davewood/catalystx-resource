@@ -1,4 +1,5 @@
 package CatalystX::Resource;
+
 use Moose::Role;
 use CatalystX::InjectComponent;
 use namespace::autoclean;

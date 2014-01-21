@@ -1,4 +1,5 @@
 package CatalystX::Resource::Controller::Resource;
+
 use Moose;
 use namespace::autoclean;
 
@@ -25,7 +26,6 @@ __PACKAGE__->config(
         Create
         Edit
     /],
-    action_roles => ['MatchRequestMethod'],
 );
 
 =head1 ATTRIBUTES
