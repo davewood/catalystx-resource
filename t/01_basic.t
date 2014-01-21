@@ -1,14 +1,11 @@
-use strict;
-use warnings;
+#!/usr/bin/env perl
+use FindBin qw/$Bin/;
+use lib "$Bin/lib";
+use CatalystX::Resource::TestKit;
 
-use FindBin;
-use lib "$FindBin::Bin/lib";
-
-use Test::More;
 use Test::Moose;
 
 BEGIN { use_ok('TestApp'); }
-
 my $testapp = new_ok ( 'TestApp' );
 
 {

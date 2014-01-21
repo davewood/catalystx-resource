@@ -1,11 +1,10 @@
-use strict;
-use warnings;
-use Test::More;
-use Test::Exception;
-use HTTP::Request::Common;
+#!/usr/bin/env perl
 use FindBin qw/$Bin/;
 use lib "$Bin/lib";
+use CatalystX::Resource::TestKit;
 
+use Test::Exception;
+use HTTP::Request::Common;
 use Catalyst::Test qw/TestApp/;
 
 my $db_file = "$Bin/lib/TestApp/testdbic.db";
