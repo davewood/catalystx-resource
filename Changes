@@ -1,9 +1,12 @@
+0.010001 2014-01-24
+    * stable release of earlier dev releases
+
 0.009_002 2014-01-21
-    - fix typo in required version of DBIx::Class
+    * fix typo in required version of DBIx::Class
 
 0.009_001 2014-01-21
-    - refactored tests
-    - remove Catalyst::ActionRole::MatchRequestMethod in favour
+    * refactored tests
+    * remove Catalyst::ActionRole::MatchRequestMethod in favour
       of new Catalyst core module Catalyst::ActionRole::HTTPMethods
 
 0.008001 2013-04-02
