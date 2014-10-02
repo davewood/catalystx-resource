@@ -15,10 +15,12 @@ requires qw/
 
 =head2 activate_fields_create
 
-(default = []).
 arrayref of form fields to activate in the create form
-(e.g. ['password', 'password_confirm'], default = [])
+Example: ['password', 'password_confirm']
+
 Can be overriden with $c->stash->{activate_form_fields}
+
+(default = []).
 
 Example: You only want admins to be able to change a field.
 Disable field by default in HTML::FormHandler.
