@@ -1,3 +1,7 @@
+0.02 2014-10-02
+    * simple version numbers
+    * test db now in-memory sqlite
+
 0.010001 2014-01-24
     * stable release of earlier dev releases
 
