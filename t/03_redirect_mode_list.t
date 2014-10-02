@@ -8,16 +8,9 @@ use URI;
 
 use Catalyst::Test qw/TestApp/;
 
-my $db_file = "$Bin/lib/TestApp/testdbic.db";
-unlink $db_file if -e $db_file;
+my ($res, $c) = ctx_request('/');
+my $schema = $c->model('DB')->schema;
 
-use_ok('TestApp::Schema');
-
-my $schema;
-lives_ok(
-    sub { $schema = TestApp::Schema->connect("DBI:SQLite:$db_file") },
-    'Connect'
-);
 ok(defined $schema, 'got a schema');
 lives_ok(sub { $schema->deploy }, 'deploy schema');
 

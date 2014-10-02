@@ -21,7 +21,7 @@ __PACKAGE__->config(
     },
     'Model::DB' => {
         connect_info => {
-            dsn => 'dbi:SQLite:' . __PACKAGE__->path_to('testdbic.db'),
+            dsn => 'dbi:SQLite:dbname=:memory:',
             user => '',
             password => '',
         },
