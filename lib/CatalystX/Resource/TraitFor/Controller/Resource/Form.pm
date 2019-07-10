@@ -76,13 +76,10 @@ sub form {
        %$form_attrs_process,
     );
 
-    if ( $self->has_form_template ) {
-        $c->stash( template => $self->form_template, form => $form );
-    }
-    else {
-        my $rendered_form = $form->render;
-        $c->stash( template => \$rendered_form );
-    }
+    my $template = $self->has_form_template
+                   ? $self->form_template  # path to tt file
+                   : \'[% form.render %]'; # ref to inline template string
+    $c->stash( template => $template, form => $form );
 
     return unless $form->validated;
 
